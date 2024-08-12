@@ -96,7 +96,7 @@ const Aside: React.FC<Props> = (props) => {
     const {Content, Sider} = Layout
 
 
-    return <div className="aside">
+    return <div style={{height:"100%"}}>
         <Content style={{padding: '0 2px', height: "100%", width: "100%"}}>
             <Breadcrumb style={{margin: '16px 10px'}}
                         items={[

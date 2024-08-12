@@ -1,6 +1,6 @@
 import React from 'react';
 
-const System = () => {
+const System: React.FC = () => {
     return (
         <div>
             System

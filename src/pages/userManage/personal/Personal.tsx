@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Personal = () => {
+const Personal: React.FC = () => {
     return (
         <div>
             Personal
