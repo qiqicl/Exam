@@ -18,6 +18,8 @@ import Paper from "../pages/paper/Paper";
 import ManageGroup from "../pages/manage-group/Manage-group";
 import Exam from "../pages/exam/Exam";
 import UserManage from "../pages/userManage/UserManage";
+import CreateItem from "../pages/quesion/create-item/Create-item";
+import ItemBank from "../pages/quesion/item-bank/Item-bank"
 const routes = [
     {
         path: '/login',
@@ -51,6 +53,30 @@ const routes = [
                     <Auth>
                         <Layout>
                             <PaperBank/>
+                        </Layout>
+                    </Auth>
+            }
+        ],
+    },
+    {
+        path: '/question',
+        element: <Paper/>,
+        children: [
+            {
+                path:'/question/item-bank',
+                element:
+                    <Auth>
+                        <Layout>
+                            <ItemBank/>
+                        </Layout>
+                    </Auth>
+            },
+            {
+                path:'/question/create-item',
+                element:
+                    <Auth>
+                        <Layout>
+                            <CreateItem/>
                         </Layout>
                     </Auth>
             }
