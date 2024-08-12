@@ -3,9 +3,9 @@ import Header from "./components/header/Header"
 import Aside from "./components/aside/Aside"
 import { Layout } from "antd"
 
-import "./index.moudle.scss"
+import "./index.module.scss"
 
-const { Content } = Layout
+// const { Content } = Layout
 
 interface Props {
   children: JSX.Element;

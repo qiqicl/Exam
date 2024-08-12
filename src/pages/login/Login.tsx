@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Button, Form, Input,Tabs } from 'antd';
+import { Button, Form, Input,Tabs,message } from 'antd';
 import type {TabsProps} from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import style from './Login.module.scss'
@@ -14,17 +14,24 @@ const Login: React.FC = () => {
         console.log(key);
         setKey(key)
     };
-    const loginStudent = async (values) => {
+    const loginStudent = async (values:LoginParams) => {
         const res = await loginStudentApi(values)
         if(res.data.data?.token){
+            message.success(res.data.msg)
             navigate('/home')
+        }else{
+            message.error(res.data.msg)
         }
+
+
     }
-    const login = async (values) => {
+    const login = async (values:LoginParams) => {
         const res = await loginApi(values)
         if(res.data.data?.token){
-            console.log(111)
+            message.success(res.data.msg)
             navigate('/home')
+        }else{
+            message.error(res.data.msg)
         }
     }
     const onFinish = (values: LoginParams) => {

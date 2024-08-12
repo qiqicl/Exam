@@ -1,17 +1,18 @@
 import React from "react";
-import "./Header.moudle.scss";
-import { Layout } from "antd";
-
-const { Header } = Layout;
+import {Layout} from "antd";
+import style from './Header.module.scss'
+const {Header} = Layout;
 
 const Index = () => {
-  return (
-    <div className="header">
-      <Header style={{ display: "flex", alignItems: "center" }}>
-        <div className="demo-logo" />
-      </Header>
-    </div>
-  );
+    return (
+        <div className={style.header}>
+            <Header style={{display: "flex", alignItems: "center"}}>
+                <div className={style.logo}>
+                    <img src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" alt=""/>
+                </div>
+            </Header>
+        </div>
+    );
 };
 
 export default Index;
