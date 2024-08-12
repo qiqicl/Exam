@@ -1,10 +1,7 @@
 import React from "react";
 import Header from "./components/header/Header"
 import Aside from "./components/aside/Aside"
-import { Layout } from "antd"
 import style from './index.module.scss'
-// const { Content } = Layout
-
 interface Props {
   children: JSX.Element;
 }

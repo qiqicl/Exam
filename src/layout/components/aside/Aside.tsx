@@ -1,16 +1,27 @@
-// import React from "react";
-import {Breadcrumb, Layout, Menu, theme} from "antd"
-import {Link} from 'react-router-dom'
+// import React from "react"
+import { useMemo } from "react";
+import {Breadcrumb, Layout, Menu, theme} from "antd";
+import {Link} from 'react-router-dom';
 import type {MenuProps} from "antd";
 import {
     CopyOutlined,
     FormOutlined,
     TeamOutlined,
     BarsOutlined,
+    DiffOutlined
 } from '@ant-design/icons'
 
 interface Props {
     children: JSX.Element;
+}
+interface Menu {
+  key:string,
+  label:string,
+  icon: JSX.Element,
+  children:{
+    key:string,
+    label:JSX.Element
+  }[]
 }
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -36,7 +47,22 @@ const Aside: React.FC<Props> = (props) => {
             ],
         },
         {
-            key: "2",
+          key: "2",
+          label: "试题管理",
+          icon: <DiffOutlined />,
+          children: [
+              {
+                  key: "/question/item-bank",
+                  label: <Link to="/question/item-bank">试题库</Link>,
+              },
+              {
+                  key: "/question/create-item",
+                  label: <Link to="/question/create-item">创建试卷</Link>,
+              },
+          ],
+        },
+        {
+            key: "3",
             icon: <FormOutlined/>,
             label: "考试管理",
             children: [
@@ -55,7 +81,7 @@ const Aside: React.FC<Props> = (props) => {
             ],
         },
         {
-            key: "3",
+            key: "4",
             icon: <TeamOutlined/>,
             label: "班级管理",
             children: [
@@ -70,7 +96,7 @@ const Aside: React.FC<Props> = (props) => {
             ],
         },
         {
-            key: "4",
+            key: "5",
             icon: <BarsOutlined/>,
             label: "系统管理",
             children: [
@@ -95,7 +121,17 @@ const Aside: React.FC<Props> = (props) => {
     ]
     const {Content, Sider} = Layout
 
-
+    const defaultOpenKeys = useMemo(() => {
+      const keys: string[] = []
+      items.forEach(val => {
+        (val as Menu).children.forEach((v) => {
+          if (v.key === location.pathname) {
+            keys.push(val?.key as string)
+          }
+        })
+      })
+      return keys
+    }, [])
     return <div style={{height:"100%"}}>
         <Content style={{padding: '0 2px', height: "100%", width: "100%", display:"flex", flexDirection:"column"}}>
             <Breadcrumb style={{margin: '16px 10px'}}
@@ -134,7 +170,7 @@ const Aside: React.FC<Props> = (props) => {
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
+                        defaultOpenKeys={defaultOpenKeys}
                         style={{height: '100%'}}
                         items={items}
                     />
