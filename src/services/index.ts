@@ -1,7 +1,9 @@
 import {
     LoginResponse,
     code,
-    LoginParams
+    LoginParams,
+    classListResponse,
+    classParams
 } from '../types/api'
 import request from './request.tsx'
 
@@ -17,3 +19,9 @@ export const loginStudentApi = (params:LoginParams) => {
     return request.post<LoginResponse>('/login/student', params)
 }
 
+export const classListApi = (page, pagesize) => {
+    return request.get<classListResponse>(`/studentGroup/list/?page=${page}&pagesize=${pagesize}`)
+}
+
+
+// https://zyxcl.xyz/exam_api/studentGroup/list?page=1&pagesize=5
