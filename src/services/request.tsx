@@ -3,14 +3,14 @@ import { message } from 'antd'
 
 // 创建 axios 实例对象
 const instance = axios.create({
-  // baseURL: 'http://121.89.213.194:9001'
-  baseURL: 'https://zyxcl.xyz/exam_api'
+  baseURL: '/api',
+  withCredentials: true
 })
 
 // 请求拦截器，统一处理公共参数
 instance.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
-  if (token && config.url !== '/api/login') {
+  if (token && config.url !== '/login') {
     config.headers.Authorization = token
   }
   return config
@@ -18,6 +18,9 @@ instance.interceptors.request.use(config => {
 
 // 响应拦截统一处理错误
 instance.interceptors.response.use(response => {
+  if(response.data.data?.token){
+    localStorage.setItem("token",response.data.data.token)
+  }
   return response
 }, err => {
   console.log(err)
