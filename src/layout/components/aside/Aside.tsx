@@ -65,7 +65,7 @@ const Aside: React.FC<Props> = (props) => {
                 },
                 {
                     key: "/manage-group/group-students",
-                    label: <Link to="/manage-group/group-students">班级列表</Link>
+                    label: <Link to="/manage-group/group-students">学生列表</Link>
                 }
             ],
         },
