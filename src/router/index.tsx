@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom'
 import Login from '../pages/login/Login'
 import Auth from '../auth/Auth'
+import Layout  from '../layout/index'
 import Home from '../pages/home/Home'
 const routes = [
   {
@@ -11,7 +12,9 @@ const routes = [
     path: '/home',
     element:
         <Auth>
-          <Home/>
+          <Layout>
+            <Home/>
+          </Layout>
         </Auth>
   },
   {
