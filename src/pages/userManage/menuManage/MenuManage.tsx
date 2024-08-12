@@ -1,8 +1,8 @@
 import React from 'react';
-
+import style from './menuManage.module.scss'
 const MenuManage = () => {
     return (
-        <div>
+        <div className={style.MenuManage}>
             MenuManage
         </div>
     );

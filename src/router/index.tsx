@@ -37,6 +37,10 @@ const routes = [
         element: <Paper/>,
         children: [
             {
+                path: '/paper',
+                element: <Navigate to="/paper/create-paper" />
+            },
+            {
                 path:'/paper/create-paper',
                 element:
                     <Auth>
@@ -60,6 +64,10 @@ const routes = [
         path: '/exam',
         element: <Exam/>,
         children: [
+            {
+                path: '/exam',
+                element: <Navigate to="/exam/record" />
+            },
             {
                 path:'/exam/record',
                 element:
@@ -94,6 +102,10 @@ const routes = [
         element: <ManageGroup/>,
         children: [
             {
+                path: '/manage-group',
+                element: <Navigate to="/manage-group/group-list" />
+            },
+            {
                 path:'/manage-group/group-list',
                 element:
                     <Auth>
@@ -117,6 +129,10 @@ const routes = [
         path: '/userManage',
         element: <UserManage/>,
         children: [
+            {
+                path: '/userManage',
+                element: <Navigate to="/userManage/userOptions" />
+            },
             {
                 path:'/userManage/userOptions',
                 element:

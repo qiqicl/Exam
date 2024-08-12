@@ -4,7 +4,6 @@ import routeConfig from './router'
 
 const App: React.FC = () => {
     const routes = useRoutes(routeConfig)
-
     return routes
 };
 
