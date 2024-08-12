@@ -97,7 +97,7 @@ const Aside: React.FC<Props> = (props) => {
 
 
     return <div style={{height:"100%"}}>
-        <Content style={{padding: '0 2px', height: "100%", width: "100%"}}>
+        <Content style={{padding: '0 2px', height: "100%", width: "100%", display:"flex", flexDirection:"column"}}>
             <Breadcrumb style={{margin: '16px 10px'}}
                         items={[
                             {
@@ -118,10 +118,9 @@ const Aside: React.FC<Props> = (props) => {
             </Breadcrumb>
             <Layout hasSider
                     style={{
-                        padding: '24px 0',
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG,
-                        height: "100%",
+                        flex:"1",
                         width: "100%"
                     }}
             >
