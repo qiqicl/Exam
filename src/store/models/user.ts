@@ -1,24 +1,27 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-// import { userInfoApi } from '../../services'
-import { userInfo } from '../../types/api'
+import { userOptionRoleApi } from '../../services'
+import type {SelectProps} from "antd";
+
+// import { userInfo } from '../../types/api'
 
 
-export const getUserInfo = createAsyncThunk('getUserInfo', async () => {
-  // const res = await userInfoApi()
-  // return res.data
+export const getRole = createAsyncThunk('getRole', async () => {
+  const res = await userOptionRoleApi()
+
+  return res.data.data.list
 })
 
 interface userState {
-  userInfo: userInfo;
   count: number;
   test: string;
+  options: SelectProps['options']
 }
 
 // 初始值
 const initialState: userState = {
-  userInfo: {} as userInfo,
   count: 0,
-  test: '123'
+  test: '123',
+  options:[]
 }
 
 const userSlice = createSlice({
@@ -34,8 +37,16 @@ const userSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(getUserInfo.fulfilled, (state, action) => {
+      .addCase(getRole.fulfilled, (state, action) => {
         // state.userInfo = action.payload.values
+        const options: SelectProps['options'] = []
+        action.payload.values.forEach((item:{name:string})=>{
+          options.push({
+            label: item.name,
+            value: item.name
+          })
+        })
+        state.options = options
         console.log('获取用户信息成功')
       })
   }
