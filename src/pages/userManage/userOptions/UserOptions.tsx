@@ -205,7 +205,7 @@ const UserOptions: React.FC = () => {
         })
     };
 
-    const cancel: PopconfirmProps['onCancel'] = (e) => {
+    const cancel: PopconfirmProps['onCancel'] = () => {
         message.error('取消');
     };
     useEffect(() => {
@@ -260,7 +260,6 @@ const UserOptions: React.FC = () => {
                         添加用户
                     </Button>
                 </div>
-
                 <div className={style.table}>
                     <div className={style.search}>
                         <Form form={search} layout="inline" onFinish={onFinish}>
@@ -295,7 +294,7 @@ const UserOptions: React.FC = () => {
                         dataSource={list}
                         columns={columns}
                         pagination={{
-                            pageSize: 5,
+                            pageSize: 7,
                             showQuickJumper: true,
                         }}
                     />

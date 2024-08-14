@@ -69,3 +69,22 @@ export type systemCreatePole = {
   name:string,
   value:number
 }
+//权限菜单
+export type systemMenuListType = {
+  key:string,
+  name:number,
+  disabled:boolean,
+  _id:string,
+  children:systemMenuListChildren[]
+}
+export type systemMenuListChildren = {
+  key:string,
+  name:number,
+  disabled:boolean,
+  _id:string,
+}
+//角色权限更新
+export type systemRoleType = {
+  permission:string[],
+  id:string,
+}

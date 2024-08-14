@@ -9,28 +9,42 @@ import {
     Form,
     Input,
     message,
-    Space,
+    Tree,
     Popconfirm,
-    type PopconfirmProps
+    type PopconfirmProps, Space
 } from 'antd';
-import type {DrawerProps} from 'antd';
-import {systemCreatePole, systemPoleList} from "../../../types/api";
-import {systemCreatePoleApi, systemDelPoleApi, systemMenuListApi} from "../../../services";
-
-
+import type {TreeProps,TreeDataNode} from 'antd';
+import {
+    systemCreatePole,
+    systemMenuListChildren,
+    systemMenuListType,
+    systemPoleList,
+} from "../../../types/api";
+import {
+    systemCreateRoleApi,
+    systemDelRoleApi,
+    systemRoleListApi,
+    systemMenuListApi,
+    systemRoleApi,
+} from "../../../services";
 const System: React.FC = () => {
     const [visible, setVisible] = useState(false)
     const [list, setList] = useState<systemPoleList[]>()
     const [form] = Form.useForm<systemCreatePole>()
     const [open, setOpen] = useState(false);
-    const [size, setSize] = useState<DrawerProps['size']>();
-
-    const showDefaultDrawer = () => {
-        setSize('default');
-        setOpen(true);
+    const [treeData, setTreeData] = useState<TreeDataNode[]>()
+    const [curId, setCurId] = useState<string>()
+    const [curPermission, setCurPermission] = useState<string[]>()
+    const [sel,setSel] = useState<string[]>([])
+    const [upDate,setUpDate] = useState<number>(0)
+    const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
+        console.log('selected', selectedKeys, info);
     };
-    const onClose = () => {
-        setOpen(false);
+    const count = () => {
+        setUpDate(upDate+1)
+    }
+    const showDefaultDrawer = () => {
+        setOpen(true);
     };
     const columns = [
         {
@@ -62,7 +76,7 @@ const System: React.FC = () => {
     const handleOk = async () => {
         const value = await form.validateFields()
         console.log(value)
-        const res = await systemCreatePoleApi(value)
+        const res = await systemCreateRoleApi(value)
         if (res.data.code === 200) {
             message.success(res.data.msg);
             getList()
@@ -76,7 +90,7 @@ const System: React.FC = () => {
         message.error('取消');
     }
     const confirm = (id: string) => {
-        systemDelPoleApi(id).then((res) => {
+        systemDelRoleApi(id).then((res) => {
             if (res.data.code === 200) {
                 message.success('删除成功');
                 getList()
@@ -96,7 +110,11 @@ const System: React.FC = () => {
                     type="primary"
                     size={"small"}
                     disabled={item.disabled}
-                    onClick={showDefaultDrawer}
+                    onClick={() => {
+                        showDefaultDrawer()
+                        setCurId(item._id)
+                    }
+                }
                 >分配角色</Button>
                 <Popconfirm
                     title="删除"
@@ -120,38 +138,100 @@ const System: React.FC = () => {
         setList(data)
     }
     const getList = async () => {
-        const res = await systemMenuListApi()
-        console.log(res.data.data.list)
+        const res = await systemRoleListApi()
         resList(res.data.data.list)
     }
+    const getMenuList = async (id:string) => {
+        const response = await systemRoleListApi()
+        const cur = response.data.data.list?.find((item:{_id:string})=>{
+            return item._id === id
+        })
+        const res = await systemMenuListApi()
+        const select:string[] = []
+        const data = res.data.data.list.map((item: systemMenuListType, index: number) => {
+            if(cur?.permission.some((per:string)=>{return per === item._id})){
+                select.push(`0-${index}`)
+            }
+            return {
+                title: item.name,
+                key: `0-${index}`,
+                disabled: item.disabled,
+                permission: item._id,
+                children: item.children?.map((it: systemMenuListChildren, i: number) => {
+                    if(cur?.permission.some((per:string)=>{return per === it._id})){
+                        select.push(`0-${index}-${i}`)
+                    }
+                    return {
+                        title: it.name,
+                        key: `0-${index}-${i}`,
+                        disabled: it.disabled,
+                        permission: it._id
+                    }
+                })
+            }
+        })
+        const s = new Set(select)
+        const a = [...s]
+        setSel(a)
+        setTreeData(data)
+        count()
+    }
+    const onClose = () => {
+        setOpen(false);
+        message.error("取消")
+    }
+    const onSure = async () => {
+        const res = await systemRoleApi({permission:curPermission!,id:curId!})
+        if(res.data.code===200){
+            message.success(res.data.msg)
+        }else {
+            message.error(res.data.msg)
+        }
+        setOpen(false);
+    }
+    const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
+        console.log('onCheck', checkedKeys, info);
+        const list = info.checkedNodes.map((item)=>{
+            return item.permission
+        })
+        setCurPermission(list)
+    };
     useEffect(() => {
         if (!visible) {
             form.resetFields()
         }
     }, [visible])
     useEffect(() => {
+        getMenuList(curId as string)
+    }, [open])
+    useEffect(() => {
         getList()
     }, [])
     return (
         <div className={style.System}>
             <Drawer
-                title={`${size} Drawer`}
+                title={`Drawer`}
                 placement="right"
-                size={size}
                 onClose={onClose}
                 open={open}
                 extra={
                     <Space>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button type="primary" onClick={onClose}>
-                            OK
+                        <Button onClick={onClose}>取消</Button>
+                        <Button type="primary" onClick={onSure}>
+                            确认
                         </Button>
                     </Space>
                 }
             >
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                <Tree
+                    key={upDate}
+                    checkable
+                    defaultExpandAll={true}
+                    onSelect={onSelect}
+                    onCheck={onCheck}
+                    treeData={treeData}
+                    defaultCheckedKeys={sel}
+                />
             </Drawer>
             <h3>角色管理</h3>
             <div className={style.main}>
@@ -164,14 +244,16 @@ const System: React.FC = () => {
                         新增角色
                     </Button>
                 </div>
-                <Table
-                    dataSource={list}
-                    columns={columns}
-                    pagination={{
-                        pageSize: 10,
-                        showQuickJumper: true,
-                    }}
-                />
+                <div className={style.table}>
+                    <Table
+                        dataSource={list}
+                        columns={columns}
+                        pagination={{
+                            pageSize: 10,
+                            showQuickJumper: true,
+                        }}
+                    />
+                </div>
                 <Modal
                     title='新增角色'
                     open={visible}
