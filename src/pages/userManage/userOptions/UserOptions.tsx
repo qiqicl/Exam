@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import style from './userOptions.module.scss'
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space} from 'antd';
+import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space, Popconfirm} from 'antd';
 import {userOptionsType, userOptionsCreate} from '../../../types/api/index'
-import type {SelectProps} from 'antd';
+import type {SelectProps, PopconfirmProps} from 'antd';
 import {
     userOptionApi,
     createUserApi,
     userOptionSearchApi,
     userOptionUpdateApi,
-    userOptionRoleApi
+    userOptionRoleApi,
+    userOptionRemoveApi
 } from '../../../services/index'
 
 interface FieldType {
@@ -19,19 +20,20 @@ interface FieldType {
     password: string;
 }
 
+type UserItem = {
+    status: number;
+    username: string;
+}
+type FormVal = Partial<UserItem>
 const UserOptions: React.FC = () => {
     const [list, setList] = useState<userOptionsType[]>()
     const [visible, setVisible] = useState(false)
     const [form] = Form.useForm<userOptionsCreate>()
     const [search] = Form.useForm<FormVal>()
-    const [pole] = Form.useForm<string[]>()
+    const [poleSelect] = Form.useForm<string[]>()
     const [updateId, setUpdateId] = useState<string | null>(null)
     const [visibleRole, setVisibleRole] = useState(false)
     const [options, setOptions] = useState<SelectProps['options']>([]);
-    const handleChange = (value: string[]) => {
-        console.log(`selected ${value}`);
-
-    };
     const resList = (res: userOptionsType[]) => {
         const data = structuredClone(res)
         data.forEach((item: userOptionsType, i: number) => {
@@ -57,9 +59,23 @@ const UserOptions: React.FC = () => {
                         password: item.password
                     })
                 }}>编辑</Button>
-                <Button type="primary" danger size={"small"} disabled={item.username === "root"}>
-                    删除
-                </Button>
+                <Popconfirm
+                    title="删除"
+                    description="确认删除此用户吗?"
+                    onConfirm={()=>confirm(item._id)}
+                    onCancel={cancel}
+                    okText="删除"
+                    cancelText="取消"
+                >
+                    <Button
+                        type="primary"
+                        danger size={"small"}
+                        disabled={item.username === "root"}
+
+                    >
+                        删除
+                    </Button>
+                </Popconfirm>
             </div>
             item.avator = item.avator ? <img src={item.avator as string} alt=""/> : item.username
             item.status = <Switch disabled={item.username === "root"} checked={!!item.status}
@@ -74,7 +90,6 @@ const UserOptions: React.FC = () => {
     }
     const roleListApi = async () => {
         const res = await userOptionRoleApi()
-        console.log(res.data.data.list)
         const list: SelectProps['options'] = []
         res.data.data.list.forEach((item: { name: string }) => {
             list.push({
@@ -82,14 +97,9 @@ const UserOptions: React.FC = () => {
                 value: item.name
             })
         })
-        console.log(list)
         setOptions(list)
     }
-    useEffect(() => {
-        listApi()
-    }, [])
     const onChange = (checked: boolean, id: string) => {
-        console.log(checked, id);
         const status = checked ? 1 : 0
         userOptionUpdateApi({id, status}).then((res) => {
             if (res.data.code === 200) {
@@ -100,17 +110,6 @@ const UserOptions: React.FC = () => {
             }
         })
     };
-    useEffect(() => {
-        if (!visibleRole) {
-            pole.resetFields()
-        }
-    }, [visibleRole])
-    useEffect(() => {
-        if (!visible) {
-            form.resetFields()
-            setUpdateId(null)
-        }
-    }, [visible])
     const handleCancel = () => {
         setVisible(false)
     }
@@ -140,8 +139,9 @@ const UserOptions: React.FC = () => {
         setVisible(false)
     }
     const roleOk = async () => {
-        const value = await pole.validateFields()
+        const value = await poleSelect.validateFields()
         console.log(value)
+        message.success("分配成功")
         setVisibleRole(false)
     }
     const columns = [
@@ -181,11 +181,6 @@ const UserOptions: React.FC = () => {
             key: 'action',
         },
     ];
-    type UserItem = {
-        status: number;
-        username: string;
-    }
-    type FormVal = Partial<UserItem>
     const searchList = async (value: FormVal) => {
         const res = await userOptionSearchApi(value)
         // console.log(res.data.data.list)
@@ -199,6 +194,33 @@ const UserOptions: React.FC = () => {
         search.resetFields()
         listApi()
     }
+    const confirm= (id:string) => {
+        userOptionRemoveApi(id).then((res)=>{
+            if(res.data.code === 200){
+                message.success('删除成功');
+                listApi()
+            }
+        })
+    };
+
+    const cancel: PopconfirmProps['onCancel'] = (e) => {
+        console.log(e);
+        message.error('Click on No');
+    };
+    useEffect(() => {
+        if (!visibleRole) {
+            poleSelect.resetFields()
+        }
+    }, [visibleRole])
+    useEffect(() => {
+        if (!visible) {
+            form.resetFields()
+            setUpdateId(null)
+        }
+    }, [visible])
+    useEffect(() => {
+        listApi()
+    }, [])
     return (
         <div className={style.UserOptions}>
             <Modal
@@ -210,25 +232,18 @@ const UserOptions: React.FC = () => {
                 okText="确定"
                 className={style.modal}
             >
-                <Form form={pole}>
-                    <Form.Item name="pole">
-                        <Space style={{width: '100%'}} direction="vertical">
-                            <Select
-                                mode="multiple"
-                                allowClear={true}
-                                style={{width: '100%'}}
-                                placeholder="Please select"
-                                onChange={handleChange}
-                                options={options}
-                                className={style.select}
-                            />
-                        </Space>
-                    </Form.Item>
-                    <Form.Item wrapperCol={{offset: 6}}>
-                        <Space>
-                            <Button type="primary" htmlType="submit">搜索</Button>
-                            <Button onClick={reset}>重置</Button>
-                        </Space>
+                <Form form={poleSelect}>
+                    <Form.Item
+                        name="pole"
+                    >
+                        <Select
+                            mode="multiple"
+                            allowClear={true}
+                            style={{width: '100%'}}
+                            placeholder="Please select"
+                            options={options}
+                            className={style.select}
+                        />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -246,7 +261,7 @@ const UserOptions: React.FC = () => {
 
                 <div className={style.table}>
                     <div className={style.search}>
-                        <Form form={search} layout="inline"  onFinish={onFinish}>
+                        <Form form={search} layout="inline" onFinish={onFinish}>
                             <Form.Item name="username" label="账号/姓名">
                                 <Input placeholder="账号/姓名"/>
                             </Form.Item>

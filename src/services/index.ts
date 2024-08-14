@@ -38,3 +38,7 @@ export const userOptionUpdateApi = (params:userOptionsCreate) => {
 export const userOptionRoleApi = () => {
     return request.get('/role/list')
 }
+//删除用户
+export const userOptionRemoveApi = (id:string) => {
+    return request.post('/user/remove',{id})
+}
