@@ -4,6 +4,7 @@ import {
     LoginParams,
     userOptionsCreate,
     userOptionsSearch,
+    systemCreatePole,
 } from '../types/api'
 import request from './request.tsx'
 
@@ -41,4 +42,16 @@ export const userOptionRoleApi = () => {
 //删除用户
 export const userOptionRemoveApi = (id:string) => {
     return request.post('/user/remove',{id})
+}
+//角色管理
+export const systemMenuListApi = () => {
+    return request.get('/role/list')
+}
+//新增角色
+export const systemCreatePoleApi = (params:systemCreatePole) => {
+    return request.post('/role/create',{...params})
+}
+//删除角色
+export const systemDelPoleApi = (id:string) => {
+    return request.post('/role/remove',{id})
 }

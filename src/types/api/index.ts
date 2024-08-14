@@ -52,3 +52,20 @@ export type userOptionsSearch = {
   username?:string,
   status?:number
 }
+//角色列表
+export type systemPoleList = {
+  _id: string,
+  name:string,
+  disabled:boolean,
+  permission: string[],
+  creator: string,
+  __v: number,
+  createTime: string | '',
+  key:number,
+  action:JSX.Element
+}
+//创建角色
+export type systemCreatePole = {
+  name:string,
+  value:number
+}

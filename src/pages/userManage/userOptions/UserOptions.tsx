@@ -112,9 +112,11 @@ const UserOptions: React.FC = () => {
     };
     const handleCancel = () => {
         setVisible(false)
+        message.error('取消');
     }
     const roleCancel = () => {
         setVisibleRole(false)
+        message.error('取消');
     }
     const handleOk = async () => {
         const value = await form.validateFields()
@@ -204,8 +206,7 @@ const UserOptions: React.FC = () => {
     };
 
     const cancel: PopconfirmProps['onCancel'] = (e) => {
-        console.log(e);
-        message.error('Click on No');
+        message.error('取消');
     };
     useEffect(() => {
         if (!visibleRole) {
@@ -235,6 +236,7 @@ const UserOptions: React.FC = () => {
                 <Form form={poleSelect}>
                     <Form.Item
                         name="pole"
+                        wrapperCol={{span: 18}}
                     >
                         <Select
                             mode="multiple"

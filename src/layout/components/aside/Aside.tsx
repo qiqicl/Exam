@@ -175,7 +175,7 @@ const Aside: React.FC<Props> = (props) => {
                         items={items}
                     />
                 </Sider>
-                <Content style={{padding: '0 24px', height: "100%", width: "100%"}}>{props.children}</Content>
+                <Content style={{padding: '0', height: "100%", width: "100%"}}>{props.children}</Content>
             </Layout>
         </Content>
     </div>
