@@ -15,16 +15,26 @@ import {
     CreateExamResponse,
     userOptionsCreate,
     userOptionsSearch,
-    systemCreatePole, systemRoleType, menuManageChangeType, menuManageCreateType,
-
+    menuManageChangeType,
+    menuManageCreateType,
+    systemCreatePole,
+    systemRoleType,
+    BaseResponse,
 } from '../types/api'
+import {
+    classListResponse,
+    classParams,
+    createClassType,
+    createStudentType,
+    saveStudentType,
+} from '../types/api/classAndStudent.ts'
 import request from './request.tsx'
 
 //验证码
 export const captchaApi = () => {
     return request.get<code>('/login/captcha')
 }
-//登录
+// 登录
 export const loginApi = (params:LoginParams) => {
     return request.post<LoginResponse>('/login', params)
 }
@@ -67,6 +77,53 @@ export const questionListSearchApi = (params:string) => {
 // 试题新建
 export const createExamApi = (params:CreateExamParams) => {
     return request.post<CreateExamResponse>(`/exam/create?${Date.now()}`,params)
+}
+// 班级列表
+export const classListApi = (params: classParams) => {
+    return request.get<classListResponse>('/studentGroup/list/', {params})
+}
+// 学生列表
+export const  StudentofClassApi = (params: classParams) => {
+    return request.get<classListResponse>('/student/list/', {params})
+}
+
+//删除
+// https://zyxcl.xyz/exam_api/studentGroup/remove?1723541844519
+export const  classRemoveApi = (id:string) => {
+    return request.post<BaseResponse>('/studentGroup/remove', {id})
+}
+// 编辑
+// https://zyxcl.xyz/exam_api/studentGroup/update?1723541773961
+export const  calssEditApi = (params: string) => {
+    return request.post<BaseResponse>(`/studentGroup/update?${params}`)
+}
+
+// 新建班级列表  /studentGroup/create
+export const  calssCreateApi = (time: any, params:createClassType) => {
+    return request.post<any>(`/studentGroup/create?${time}`,params)
+}
+
+//新建学生列表  `/student/create${time}`,value   createStudentType
+
+export const  studentCreateApi = (time: any, params: createStudentType) => {
+    return request.post<any>(`/student/create?${time}`,params)
+}
+
+//编辑学生列表
+export const  studentEditApi = (eee: number, params: saveStudentType) => {
+    return request.post<BaseResponse>(`/student/update?${eee}`, params)
+}
+
+// 删除学生列表
+// /student/remove
+export const  studentRemoveApi = (id:string) => {
+    return request.post<BaseResponse>('/student/remove', {id})
+}
+
+//用户信息
+// https://zyxcl.xyz/exam_api/user/list  time: number, value:
+export const  calssUserApi = () => {
+    return request.get<classListResponse>('/user/list')
 }
 
 //用户管理
@@ -129,3 +186,33 @@ export const systemCreateMenuApi = (params:menuManageCreateType) => {
 export const systemDelMenuApi = (id:string) => {
     return request.post('/permission/remove',{id})
 }
+// classify/list 科目
+export const  calssifyClassApi = () => {
+    return request.get<classListResponse>('/classify/list')
+}
+
+// 获取学生信息中的班级信息
+// https://zyxcl.xyz/exam_api/studentGroup/list?page=1&pagesize=5
+export const  StudentInfoApi = () => {
+    return request.get('studentGroup/list')
+}
+// 个人信息
+export const userInfoApi = () => {
+    return request.get('/user/info')
+}
+// 考试记录
+
+// https://zyxcl.xyz/exam_api/examination/list
+export const examRecordApi = () => {
+    return request.get<RecordResponse>('/examination/list')
+}
+
+// 科目分类接口 https://zyxcl.xyz/exam_api/classify/list
+export const classifyApi = () => {
+  return request.get<any>('/classify/list')
+}
+// 考试班级接口 https://zyxcl.xyz/exam_api/studentGroup/list
+export const examBanApi = () => {
+  return request.get<any>('/studentGroup/list')
+}
+
