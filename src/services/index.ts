@@ -15,7 +15,8 @@ import {
     CreateExamResponse,
     userOptionsCreate,
     userOptionsSearch,
-    systemCreatePole, systemRoleType,
+    systemCreatePole,
+    systemRoleType,
 
 } from '../types/api'
 import request from './request.tsx'
@@ -114,5 +115,8 @@ export const systemMenuListApi = () => {
 export const systemRoleApi = (params:systemRoleType) => {
     return request.post('/role/update',params)
 }
-
+// 个人信息
+export const userInfoApi = () => {
+    return request.get('/user/info')
+}
 
