@@ -24,14 +24,14 @@ export type Question = {
 export type LoginParams = Record<'username' | 'password' | 'code', string>
 export type LoginResponse = BaseResponse & {
   data: {
-    token:string,
+    token: string,
   }
 }
 
 //验证码
 export type code = BaseResponse & {
   data: {
-    code:string
+    code: string
   }
 }
 
@@ -132,6 +132,9 @@ export type ExamUpdateRespanse = {
   code: number;
   msg: string;
 }
+
+
+
 
 // 用户列表
 export type UserListResponse = {
