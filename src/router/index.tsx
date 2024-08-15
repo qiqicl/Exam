@@ -40,7 +40,7 @@ const routes = [
         children: [
             {
                 path: '/paper',
-                element: <Navigate to="/paper/create-paper" />
+                element: <Navigate to="/paper/paper-bank" />
             },
             {
                 path:'/paper/create-paper',
@@ -66,6 +66,10 @@ const routes = [
         path: '/question',
         element: <Paper/>,
         children: [
+            {
+                path: '/question',
+                element: <Navigate to="/question/item-bank" />
+            },
             {
                 path:'/question/item-bank',
                 element:

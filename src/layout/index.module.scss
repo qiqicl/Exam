@@ -5,9 +5,8 @@
     display: flex;
     flex-direction: column;
     .main{
-        // height: ;
         flex: 1;
-        // display: flex;
+        // overflow: hidden;
         .aside{
             height: 100%;
         }
