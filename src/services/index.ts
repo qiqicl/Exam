@@ -2,7 +2,6 @@ import {
     LoginResponse,
     code,
     LoginParams,
-    RecordResponse
 } from '../types/api'
 import request from './request.tsx'
 

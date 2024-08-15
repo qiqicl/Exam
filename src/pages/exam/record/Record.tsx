@@ -1,11 +1,11 @@
-import React, { useEffect,useRef,useState } from 'react';
+import React, { useEffect,useRef } from 'react';
 import style from './record.module.scss'
-import {examRecordApi, userListApi} from '../../../services/index'
+import {examRecordApi} from '../../../services/index'
 import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
 import { Button, Dropdown } from 'antd';
-import { RecordResponse, RowResponse, examiner } from '../../../types/api'
+import {  RowResponse } from '../../../types/api'
 import {statusText} from './constants'
 
 const Record: React.FC = () => {
@@ -13,6 +13,7 @@ const Record: React.FC = () => {
   // 调总数据的接口
   const getRecord = async () => {
     const res = await examRecordApi()
+    console.log(res)
   }
 
   useEffect(() => {
@@ -244,12 +245,15 @@ const Record: React.FC = () => {
       rowKey='_id'
       request = {async () => {
         const res = await examRecordApi()
-        console.log(res.data.data.list)
-        res.data.data.list.forEach((item)=>{
+        console.log(res)
+        const list = structuredClone(res.data.data.list)
+        list.forEach((item:{examiner:string[]|string})=>{
           let examiner = ''
-          item.examiner.forEach((it,i)=>{
-            examiner += i === item.examiner.length - 1?it:it+","
-          })
+          if(typeof item.examiner !== "string"){
+            item.examiner.forEach((it: string,i: number)=>{
+              examiner += i === item.examiner.length - 1?it:it+","
+            })
+          }
           item.examiner = examiner
         })
         return Promise.resolve({

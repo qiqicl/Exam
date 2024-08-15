@@ -34,8 +34,16 @@ export interface DataType {
   createTime: string
 }
 
-// 考试记录
-export type RecordResponse = BaseResponse & {
+export type DataTypeResponse = BaseResponse & {
+  data:{
+    // list: Array<T>
+  }
+}
+
+
+
+// 调考试记录 最里面的值
+export type listResponse = {
   id:string,
   name:string,
   classify:string,
@@ -46,8 +54,9 @@ export type RecordResponse = BaseResponse & {
   group:Array<string>[],
   startTime:string,
   endTime:string
+
 }
-export type RowResponse = Omit<RecordResponse,'code | msg'>
+export type RowResponse = Omit<listResponse,'code | msg'>
 
 
 // match的数据类型
@@ -79,5 +88,7 @@ export interface examListResponse {
   _id:string;
 }
 
-
+export interface examinerType {
+  examiner: string[]; // 确保 examiner 是一个字符串数组
+}
 
