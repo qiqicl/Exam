@@ -18,7 +18,6 @@ import {
     systemCreatePole,
     systemRoleType,
     BaseResponse,
-    
 } from '../types/api'
 import {
     classListResponse,
@@ -26,8 +25,6 @@ import {
     createClassType,
     createStudentType,
     saveStudentType,
-
-    
 } from '../types/api/classAndStudent.ts'
 import request from './request.tsx'
 
@@ -98,7 +95,7 @@ export const  classRemoveApi = (id:string) => {
 export const  calssEditApi = (params: string) => {
     return request.post<BaseResponse>(`/studentGroup/update?${params}`)
 }
- 
+
 // 新建班级列表  /studentGroup/create
 export const  calssCreateApi = (time: any, params:createClassType) => {
     return request.post<any>(`/studentGroup/create?${time}`,params)
@@ -122,7 +119,7 @@ export const  studentRemoveApi = (id:string) => {
 }
 
 //用户信息
-// https://zyxcl.xyz/exam_api/user/list  time: number, value: 
+// https://zyxcl.xyz/exam_api/user/list  time: number, value:
 export const  calssUserApi = () => {
     return request.get<classListResponse>('/user/list')
 }
@@ -182,3 +179,8 @@ export const  calssifyClassApi = () => {
 export const  StudentInfoApi = () => {
     return request.get('studentGroup/list')
 }
+// 个人信息
+export const userInfoApi = () => {
+    return request.get('/user/info')
+}
+
