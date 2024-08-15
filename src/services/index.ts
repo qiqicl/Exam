@@ -15,7 +15,7 @@ import {
     CreateExamResponse,
     userOptionsCreate,
     userOptionsSearch,
-    systemCreatePole, systemRoleType,
+    systemCreatePole, systemRoleType, menuManageChangeType, menuManageCreateType,
 
 } from '../types/api'
 import request from './request.tsx'
@@ -105,14 +105,27 @@ export const systemCreateRoleApi = (params:systemCreatePole) => {
 export const systemDelRoleApi = (id:string) => {
     return request.post('/role/remove',{id})
 }
-//权限菜单
+//用户左侧权限
 export const systemMenuListApi = () => {
     return request.get('/user/menulist',)
 }
 //角色权限更新
-// role/update
 export const systemRoleApi = (params:systemRoleType) => {
     return request.post('/role/update',params)
 }
-
-
+//权限菜单
+export const systemAuthorityMenuApi = () => {
+    return request.get('/permission/list',)
+}
+//修改权限菜单
+export const systemChangeMenuApi = (params:menuManageChangeType) => {
+    return request.post('/permission/update',params)
+}
+//创建权限
+export const systemCreateMenuApi = (params:menuManageCreateType) => {
+    return request.post('/permission/create',params)
+}
+//删除权限
+export const systemDelMenuApi = (id:string) => {
+    return request.post('/permission/remove',{id})
+}
