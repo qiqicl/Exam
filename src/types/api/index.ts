@@ -209,9 +209,10 @@ export type userOptionsType = {
 export type userOptionsCreate = {
     username?: string | JSX.Element,
     password?: string | JSX.Element,
-    status: number | string | JSX.Element,
+    status?: number | string | JSX.Element,
     check?: string | JSX.Element,
-    id?: string
+    id?: string,
+    role?:string[]
 }
 //用户搜索
 export type userOptionsSearch = {
