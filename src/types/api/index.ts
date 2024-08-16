@@ -71,26 +71,28 @@ export type examListSearchParams = {
 }
 
 // 试题列表
+export type QuestionItem  =  {
+  _id: string,
+  question: string,
+  type: "1"|"2"|"3"|"4",
+  classify: string,
+  answer: string,
+  options: string[],
+  desc: string,
+  __v: number,
+  checked?:boolean,
+  key:string
+}
 export type QuestionListResponse = {
-    code: number,
-    msg: string,
-    data: {
-        total: number,
-        list: {
-            _id: string,
-            question: string,
-            type: "1" | "2" | "3" | "4",
-            classify: string,
-            answer: string,
-            options: string[],
-            desc: string,
-            __v: number,
-            checked?: boolean
-        }[],
-        page?: number,
-        pagesize?: number,
-        totalPage?: number
-    }
+  code: number,
+  msg: string,
+  data: {
+    total: number,
+    list: QuestionItem[],
+    page?: number,
+    pagesize?: number,
+    totalPage?: number
+  }
 }
 
 // 试卷详情
@@ -328,4 +330,18 @@ export interface examListResponse {
 
 export interface examinerType {
   examiner: string[]; // 确保 examiner 是一个字符串数组
+}
+
+//试题题型列表
+export type QuestionTypeResponse = {
+  code: number,
+  msg: string,
+  data: {
+    list:
+    {
+      _id: string,
+      name: string,
+      value: number
+    }[]
+  }
 }
