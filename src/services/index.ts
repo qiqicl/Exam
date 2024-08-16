@@ -18,6 +18,7 @@ import {
     systemCreatePole,
     systemRoleType,
     BaseResponse,
+    QuestionTypeResponse
 } from '../types/api'
 import {
     classListResponse,
@@ -68,6 +69,16 @@ export const userListApi = () => {
 export const classifyListApi = () => {
     return request.get<ClassifyListResponse>('/classify/list')
 }
+// 试题列表
+export const questionListApi = () => {
+    return request.get<QuestionListResponse>(`/question/list`)
+}
+
+// 试题类型
+export const questionTypeApi = () => {
+    return request.get<QuestionTypeResponse>(`/question/type/list`)
+}
+
 //试题筛选
 export const questionListSearchApi = (params:string) => {
     return request.get<QuestionListResponse>(`/question/list?classify=${params}`)
@@ -97,14 +108,14 @@ export const  calssEditApi = (params: string) => {
 }
 
 // 新建班级列表  /studentGroup/create
-export const  calssCreateApi = (time: any, params:createClassType) => {
-    return request.post<any>(`/studentGroup/create?${time}`,params)
+export const  calssCreateApi = (time: number, params:createClassType) => {
+    return request.post<createClassType>(`/studentGroup/create?${time}`,params)
 }
 
 //新建学生列表  `/student/create${time}`,value   createStudentType
 
-export const  studentCreateApi = (time: any, params: createStudentType) => {
-    return request.post<any>(`/student/create?${time}`,params)
+export const  studentCreateApi = (time:number, params: createStudentType) => {
+    return request.post< createStudentType>(`/student/create?${time}`,params)
 }
 
 //编辑学生列表

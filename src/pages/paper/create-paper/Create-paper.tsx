@@ -3,6 +3,7 @@ import { useState, useEffect,useRef } from "react"
 import { Button, message, Steps, theme, Form, Input, Select, Flex, Radio } from "antd"
 import { classifyListApi,questionListSearchApi,createExamApi } from "../../../services/index"
 import { ClassifyListResponse ,QuestionListResponse, Question} from "../../../types/api/index"
+import QuestionList from "./components/QuestionList"
 import style from "./create-paper.module.scss"
 
 const { TextArea } = Input;
@@ -18,16 +19,28 @@ const CreatePaper = () => {
   const [classify, setClassify] = useState<ClassifyListResponse["data"]>()
   const [combination,setCombination] = useState<"a"|"b">("a")
   const [questionList, setQuestionList] = useState<QuestionListResponse["data"]>({} as QuestionListResponse["data"])
-  const creatMsg = useRef<CreatMsg>({} as CreatMsg)
-  const question = useRef<string[]>([])
-  const newExam = useRef<QuestionListResponse["data"]["list"]>([])
   const [name,setName] = useState<string>()
   const [myClassify,setMyClassify] = useState<string>()
   const [randomNum ,setRandomNum] = useState<number>(0)
+  const [open, setOpen] = useState<boolean>(false)
   const maxLength = useRef<number>(0)
+  const creatMsg = useRef<CreatMsg>({} as CreatMsg)
+  const question = useRef<string[]>([])
+  const newExam = useRef<QuestionListResponse["data"]["list"]>([])
+
+  const showModal = () => {
+    setOpen(true);
+  }
+
+  const handleCancel = () => {
+    console.log('Clicked cancel button');
+    setOpen(false);
+  }
+
   const next = () => {
     setCurrent(current + 1)
     console.log(creatMsg.current)
+    console.log(detailRender())
     // console.log()
   }
 
@@ -47,25 +60,35 @@ const CreatePaper = () => {
     }
   }, [current])
 
-  useEffect(() => {
-    // console.log("1")
+
+  const goRandom = () => {
     if( Object.keys(questionList).length !== 0) {
-      // console.log("qqq")
-      if(combination === "a") {
-        questionList?.list?.forEach( q => { if(q.checked) question.current.push(q._id) })
-      }else if(combination === "b" && randomNum !== 0 ) {
+      if(combination === "b" && randomNum !== 0 ) {
+        console.log(questionList.list)
+        newExam.current = []
+        question.current = []
         for (let i = 0; i < randomNum; i++) {
           const ran = Math.floor(Math.random() * (questionList?.list.length))
           newExam.current.push(questionList?.list.splice(ran, 1)[0])
-          newExam.current.forEach((q) => {question.current.push(q?._id)})
         }
+        newExam.current.forEach((q) => {question.current.push(q?._id)})
       }
-      console.log(question)
     }
-  },[combination,questionList,randomNum])
+    creatMsg.current = {
+      "name":name!,
+      "classify":myClassify!,
+      "questions":question.current!
+    }
+    console.log(creatMsg.current)
+  }
 
   const changeI = (v:string) => {
     setName(v)
+  }
+
+  const optional = (arr:QuestionListResponse["data"]["list"]) => {
+    newExam.current = arr
+    newExam.current.forEach((q) => {question.current.push(q?._id)})
   }
 
   const detailRender = () => {
@@ -107,7 +130,9 @@ const CreatePaper = () => {
   const changeS = async (e:string) => {
     setMyClassify(e)
     const res = await questionListSearchApi(e as string)
-    setQuestionList(res.data.data)
+    setQuestionList({...res.data.data,list:res.data.data.list.map((q) => {
+      return {...q,checked:false,key:q._id}
+    })})
     maxLength.current = res.data.data.list.length
     console.log(res.data.data)
   }
@@ -201,7 +226,8 @@ const CreatePaper = () => {
           </Flex>
           {
             combination === "a" ?
-            <Button>选择试题</Button> :
+            <Button onClick={showModal}>选择试题</Button> :
+            <>
             <Input
               type={"number"}
               style={{width:"150px"}}
@@ -209,6 +235,8 @@ const CreatePaper = () => {
               onChange={(e) => {changeN(e.target.value)}}
               max={maxLength.current}
             />
+            <Button onClick={goRandom}>确认选择</Button>
+            </>
           }
         </div>
       ),
@@ -216,12 +244,12 @@ const CreatePaper = () => {
     {
       title: "展示试卷基本信息",
       content:
-        <div>
+        <div style={{width:"50%",margin:"0 auto",textAlign:"left"}}>
           <div className="header">
-            <h4>试卷信息</h4>
-            <div>试卷名称： {creatMsg.current.name}</div>
-            <div>组卷方式： {combination === "a" ? "选题组卷" : "随机组卷"}</div>
-            <div>科目： {creatMsg.current.classify}</div>
+            <h4 style={{marginTop:"15px",textAlign:"center"}}>试卷信息</h4>
+            <div className={style.title}>试卷名称： {creatMsg.current.name}</div>
+            <div className={style.title}>组卷方式： {combination === "a" ? "选题组卷" : "随机组卷"}</div>
+            <div className={style.title}>科目： {creatMsg.current.classify}</div>
             <div style={{padding:"20px 0"}}>
               {detailRender().map((item,index) => {
               return <div key={index} className={style.question}>
@@ -257,39 +285,42 @@ const CreatePaper = () => {
   };
 
   return (
-    <div
-      className="creatPaper"
-      style={{
-        padding: "50px 30px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <Steps current={current} items={items} type={"inline"} />
-      <div style={contentStyle}>{steps[current].content}</div>
-      <div style={{ marginTop: 24 }}>
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            下一步
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => createExam()}
-          >
-            提交
-          </Button>
-        )}
-        {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-            上一步
-          </Button>
-        )}
+    <>
+      <div
+        className="creatPaper"
+        style={{
+          padding: "50px 30px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Steps current={current} items={items} type={"inline"} />
+        <div style={contentStyle}>{steps[current].content}</div>
+        <div style={{ marginTop: 24 }}>
+          {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+              下一步
+            </Button>
+          )}
+          {current === steps.length - 1 && (
+            <Button
+              type="primary"
+              onClick={() => createExam()}
+            >
+              提交
+            </Button>
+          )}
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              上一步
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+      <QuestionList open={open} handleCancel={handleCancel} setOpen={setOpen} questionList={questionList} optional={optional}/>
+    </>
+  )
+}
 
 export default CreatePaper;

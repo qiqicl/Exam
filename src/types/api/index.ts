@@ -72,22 +72,24 @@ export type examListSearchParams = {
 }
 
 // 试题列表
+export type QuestionItem  =  {
+  _id: string,
+  question: string,
+  type: "1"|"2"|"3"|"4",
+  classify: string,
+  answer: string,
+  options: string[],
+  desc: string,
+  __v: number,
+  checked?:boolean,
+  key:string
+}
 export type QuestionListResponse = {
   code: number,
   msg: string,
   data: {
     total: number,
-    list: {
-        _id: string,
-        question: string,
-        type: "1"|"2"|"3"|"4",
-        classify: string,
-        answer: string,
-        options: string[],
-        desc: string,
-        __v: number,
-        checked?:boolean
-      }[],
+    list: QuestionItem[],
     page?: number,
     pagesize?: number,
     totalPage?: number
@@ -250,4 +252,18 @@ export type systemMenuListChildren = {
 export type systemRoleType = {
   permission:string[],
   id:string,
+}
+
+//试题题型列表
+export type QuestionTypeResponse = {
+  code: number,
+  msg: string,
+  data: {
+    list:
+    {
+      _id: string,
+      name: string,
+      value: number
+    }[]
+  }
 }
