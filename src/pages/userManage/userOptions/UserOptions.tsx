@@ -162,36 +162,43 @@ const UserOptions: React.FC = () => {
     }
     const columns:TableProps<userOptionsType>["columns"] = [
         {
+            align:"center",
             title: '头像',
             dataIndex: 'avator',
             key: 'avator',
         },
         {
+            align:"center",
             title: '是否禁用',
             dataIndex: 'status',
             key: 'status',
         },
         {
+            align:"center",
             title: '用户名',
             dataIndex: 'username',
             key: 'username',
         },
         {
+            align:"center",
             title: '密码',
             dataIndex: 'password',
             key: 'password',
         },
         {
+            align:"center",
             title: '最近登录',
             dataIndex: 'lastOnlineTime',
             key: 'lastOnlineTime',
         },
         {
+            align:"center",
             title: '创建人',
             dataIndex: 'creator',
             key: 'creator',
         },
         {
+            align:"center",
             title: '操作',
             dataIndex: 'action',
             key: 'action',

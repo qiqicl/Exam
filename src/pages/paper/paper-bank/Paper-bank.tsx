@@ -65,7 +65,7 @@ const PaperBank = () => {
     getExamList()
   }
 
-  const isUpdate = async (id:string,index:number) => {
+  const isUpdate = async (index:number) => {
     const newList = structuredClone(list)
     newList.forEach(i => {
       i.isUpdateNow = false
@@ -102,6 +102,7 @@ const PaperBank = () => {
 
   const columns: TableProps<DataType>['columns'] = [
     {
+      align:"center",
       title: '试卷名称',
       dataIndex: 'name',
       key: 'name',
@@ -112,27 +113,32 @@ const PaperBank = () => {
       )
     },
     {
+      align:"center",
       title: '科目类型',
       dataIndex: 'classify',
       key: 'classify',
     },
     {
+      align:"center",
       title: '总分',
       dataIndex: 'mark',
       key: 'mark',
       width:100
     },
     {
+      align:"center",
       title: '创建人',
       key: 'creator',
       dataIndex: 'creator',
     },
     {
+      align:"center",
       title: '创建时间',
       key: 'createTime',
       dataIndex: 'createTime',
     },
     {
+      align:"center",
       title: '操作',
       key: 'action',
       fixed: 'right',
@@ -143,7 +149,7 @@ const PaperBank = () => {
             <a onClick={() => {cancel()}} style={{color:"#4096ff"}}>取消</a>
           </Space>:
           <Space size="middle">
-            <Button size="small" type="primary" style={{fontSize:"12px"}} onClick={() => {isUpdate(record._id,index)}}>编辑</Button>
+            <Button size="small" type="primary" style={{fontSize:"12px"}} onClick={() => {isUpdate(index)}}>编辑</Button>
             <Popconfirm
             title="删除"
             description="是否删除此试卷"

@@ -87,7 +87,6 @@ const MenuManage: React.FC = () => {
             dataIndex: 'name',
             key: 'name',
             editable: true,
-            width: "10%"
         },
         {
             title: '菜单路径',
@@ -234,8 +233,8 @@ const MenuManage: React.FC = () => {
                         key: `${index}-${i}`,
                         name: it.name,
                         path: it.path,
-                        createTime: item.createTime ? new Date(item.createTime).toLocaleString() : '-',
-                        isBtn: item.isBtn ? "按钮" : "页面",
+                        createTime: it.createTime ? new Date(it.createTime).toLocaleString() : '-',
+                        isBtn: it.isBtn ? "按钮" : "页面",
                         id: it._id,
                     }
                 })
