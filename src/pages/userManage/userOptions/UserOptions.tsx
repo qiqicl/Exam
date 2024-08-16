@@ -30,7 +30,7 @@ const UserOptions: React.FC = () => {
     const [visible, setVisible] = useState(false)
     const [form] = Form.useForm<userOptionsCreate>()
     const [search] = Form.useForm<FormVal>()
-    const [poleSelect] = Form.useForm<string[]>()
+    const [roleSelect] = Form.useForm<{role:string[]}>()
     const [updateId, setUpdateId] = useState<string | null>(null)
     const [visibleRole, setVisibleRole] = useState(false)
     const [options, setOptions] = useState<SelectProps['options']>([]);
@@ -46,6 +46,11 @@ const UserOptions: React.FC = () => {
                     onClick={() => {
                         setVisibleRole(true)
                         roleListApi()
+                        setUpdateId(item._id)
+                        console.log(item)
+                        roleSelect.setFieldsValue({
+                            role:item.role
+                        })
                     }}
                 >分配角色</Button>
                 <Button size={"small"} disabled={item.username === "root"} onClick={() => {
@@ -144,9 +149,15 @@ const UserOptions: React.FC = () => {
         setVisible(false)
     }
     const roleOk = async () => {
-        const value = await poleSelect.validateFields()
-        console.log(value)
-        message.success("分配成功")
+        const value = await roleSelect.validateFields()
+        console.log(value,updateId)
+        const res = await userOptionUpdateApi({id:updateId as string,...value})
+        if(res.data.code === 200){
+            message.success("分配成功")
+            listApi()
+        }else {
+            message.success(res.data.msg)
+        }
         setVisibleRole(false)
     }
     const columns:TableProps<userOptionsType>["columns"] = [
@@ -213,7 +224,7 @@ const UserOptions: React.FC = () => {
     };
     useEffect(() => {
         if (!visibleRole) {
-            poleSelect.resetFields()
+            roleSelect.resetFields()
         }
     }, [visibleRole])
     useEffect(() => {
@@ -236,9 +247,9 @@ const UserOptions: React.FC = () => {
                 okText="确定"
                 className={style.modal}
             >
-                <Form form={poleSelect}>
+                <Form form={roleSelect}>
                     <Form.Item
-                        name="pole"
+                        name="role"
                         wrapperCol={{span: 18}}
                     >
                         <Select

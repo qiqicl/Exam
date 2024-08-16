@@ -38,8 +38,8 @@ const Index = () => {
   }
   useEffect(() => {
     console.log(userInfo)
-    setAvatar(userInfo.avator || "")
-    setUserName(userInfo.username as string)
+    setAvatar(userInfo?.avator || "")
+    setUserName(userInfo?.username as string)
   }, [userInfo]);
   useEffect(() => {
     randomColor()
