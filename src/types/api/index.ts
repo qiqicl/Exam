@@ -71,18 +71,21 @@ export type examListSearchParams = {
 }
 
 // 试题列表
-export type QuestionItem = {
-    _id: string,
-    question: string,
-    type: "1" | "2" | "3" | "4",
-    classify: string,
-    answer: string,
-    options: string[],
-    desc: string,
-    __v: number,
-    checked?: boolean,
-    key: string
+export type QuestionItem  =  {
+  _id: string,
+  question: string,
+  type: "1"|"2"|"3"|"4",
+  classify: string,
+  answer: string,
+  options: string[],
+  desc: string,
+  __v: number,
+  checked?:boolean,
+  key?:string
 }
+
+export type QueationDataType = QuestionItem & {isUpdateNow :boolean,key?:string}
+
 export type QuestionListResponse = {
     code: number,
     msg: string,
@@ -133,6 +136,8 @@ export type ExamUpdateRespanse = {
     code: number;
     msg: string;
 }
+
+export type QuestionUpdateParams = Record<"id" | "question", string>
 
 // 用户列表
 export type UserListResponse = {

@@ -54,7 +54,7 @@ const Draw: React.FC<Props>  = (props) => {
 
   const exportPDF = async (title: string, ref: HTMLDivElement) => {
     // 根据dpi放大，防止图片模糊
-    const scale = window.devicePixelRatio > 1 ? window.devicePixelRatio : 2;
+    const scale = 4;
     // 下载尺寸 a4 纸 比例
     const pdf = new jsPDF('p', 'pt', 'a4');
     let width = ref.offsetWidth;
@@ -73,8 +73,8 @@ const Draw: React.FC<Props>  = (props) => {
     // 页面偏移
     let position = 0;
     // a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
-    const imgWidth = 595.28;
-    const imgHeight = 592.28 / contentWidth * contentHeight;
+    const imgWidth = 575.28;
+    const imgHeight = 572.28 / contentWidth * contentHeight;
 
     // 使用 dom-to-image-more 生成图片
     const imgDataUrl = await domtoimage.toPng(ref, {
