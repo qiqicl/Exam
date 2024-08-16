@@ -257,14 +257,6 @@ export interface DataType {
   createTime: string
 }
 
-export type DataTypeResponse = BaseResponse & {
-  data:{
-    // list: Array<T>
-  }
-}
-
-
-
 // 调考试记录 最里面的值
 export type listResponse = {
   id:string,
@@ -277,16 +269,15 @@ export type listResponse = {
   group:Array<string>[],
   startTime:string,
   endTime:string
-
 }
-export type RowResponse = Omit<listResponse,'code | msg'>
+export type RowResponse = listResponse & {
+  url:string
+}
 
 
 // match的数据类型
 export interface matchResponse {
-  key:string;
   name:string;
-  class:string;
   creator:string;
   createTime:number;
   classify:string;
@@ -299,19 +290,63 @@ export interface match2Response {
   name:string;
   class:string;
   creator:string;
-  createTime:number
+  createTime:string
 }
+export interface formDataType {
+  name: string;
+  classify:string;
+  examiner:string;
+  group:string;
+  startTime:string;
+  endTime:string;
+  examId:string
+  dateTimeRange:string[]
+}
+
 
 // examList 数据类型
 export interface examListResponse {
   classify:string;
-  createTime:number;
+  createTime:string;
   creator:string;
+  endTime:string;
+  startTime:string;
+  examId:string;
+  examiner: string[];
+  group:[];
   name:string;
+  status:number;
   _id:string;
+  __v:number;
 }
 
 export interface examinerType {
   examiner: string[]; // 确保 examiner 是一个字符串数组
 }
 
+export interface examListResponse {
+  code:number;
+  data:{
+    list:[];
+    total:number;
+    totalPage: number;
+  }
+  msg:string;
+}
+// 创建试卷返回的结果类型
+export interface createTestType {
+  classify:string;
+  endTime:string;
+  examId:string;
+  examiner:string;
+  group:string;
+  name:string;
+  startTime:string;
+}
+
+export interface listType {
+  examiner:string[]|string;
+  startTime:string;
+  createTime:string;
+  endTime:string;
+}

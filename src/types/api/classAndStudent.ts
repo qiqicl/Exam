@@ -2,7 +2,7 @@
 export type classListResponse = {
     code: number;
     data: {
-        list: string;
+        list: [];
         total?: number;
         totalPage?: number;
     };
@@ -97,9 +97,6 @@ export type createStudentType = {
     status?: number;
     username: string; 
 }
-
-
-
 
 export type saveStudentType = {
     age: number;

@@ -220,7 +220,7 @@ const Aside: React.FC<Props> = (props) => {
               items={items}
             />
           </Sider>
-          <Content style={{ padding: '0', height: "100%", width: "100%" ,display:"flex",flexDirection:"column"}}>
+          <Content style={{ padding: '0', height: "100%" ,display:"flex",flexDirection:"column"}}>
             <Breadcrumb
               style={{ margin: "16px 10px" }}
               items={beadCrumb}

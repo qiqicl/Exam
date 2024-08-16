@@ -18,6 +18,8 @@ import {
     systemCreatePole,
     systemRoleType,
     BaseResponse,
+    examListResponse,
+    createTestType
 } from '../types/api'
 import {
     classListResponse,
@@ -80,6 +82,9 @@ export const createExamApi = (params:CreateExamParams) => {
 export const classListApi = (params: classParams) => {
     return request.get<classListResponse>('/studentGroup/list/', {params})
 }
+export const classListApi1 = () => {
+    return request.get<classListResponse>('/studentGroup/list/')
+}
 // 学生列表
 export const  StudentofClassApi = (params: classParams) => {
     return request.get<classListResponse>('/student/list/', {params})
@@ -97,19 +102,19 @@ export const  calssEditApi = (params: string) => {
 }
 
 // 新建班级列表  /studentGroup/create
-export const  calssCreateApi = (time: any, params:createClassType) => {
-    return request.post<any>(`/studentGroup/create?${time}`,params)
+export const  calssCreateApi = (time: number, params:createClassType) => {
+    return request.post<createClassType>(`/studentGroup/create?${time}`,params)
 }
 
 //新建学生列表  `/student/create${time}`,value   createStudentType
 
-export const  studentCreateApi = (time: any, params: createStudentType) => {
-    return request.post<any>(`/student/create?${time}`,params)
+export const  studentCreateApi = (time: number, params: createStudentType) => {
+    return request.post<createStudentType>(`/student/create?${time}`,params)
 }
 
 //编辑学生列表
-export const  studentEditApi = (eee: number, params: saveStudentType) => {
-    return request.post<BaseResponse>(`/student/update?${eee}`, params)
+export const  studentEditApi = (time: number, params: saveStudentType) => {
+    return request.post<BaseResponse>(`/student/update?${time}`, params)
 }
 
 // 删除学生列表
@@ -184,21 +189,12 @@ export const userInfoApi = () => {
     return request.get('/user/info')
 }
 // 考试记录
-
 // https://zyxcl.xyz/exam_api/examination/list
 export const examRecordApi = () => {
-    return request.get<RecordResponse>('/examination/list')
+    return request.get<examListResponse>('/examination/list')
 }
 
-// 科目分类接口 https://zyxcl.xyz/exam_api/classify/list
-export const classifyApi = () => {
-  return request.get<any>('/classify/list')
-}
-// 考试班级接口 https://zyxcl.xyz/exam_api/studentGroup/list
-export const examBanApi = () => {
-  return request.get<any>('/studentGroup/list')
-}
-
-
-
-
+// 创建考试试卷 https://zyxcl.xyz/exam_api/examination/create?1723711365616
+export const createTestApi = (time:number, createData:createTestType) => {
+    return request.post<BaseResponse>(`/examination/create?${time}`, createData)
+  }
