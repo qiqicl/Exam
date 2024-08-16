@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import style from './userOptions.module.scss'
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space, Popconfirm} from 'antd';
+import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space, Popconfirm, TableProps,Image} from 'antd';
 import {userOptionsType, userOptionsCreate} from '../../../types/api/index'
 import type {SelectProps, PopconfirmProps} from 'antd';
 import {
@@ -30,7 +30,7 @@ const UserOptions: React.FC = () => {
     const [visible, setVisible] = useState(false)
     const [form] = Form.useForm<userOptionsCreate>()
     const [search] = Form.useForm<FormVal>()
-    const [poleSelect] = Form.useForm<string[]>()
+    const [roleSelect] = Form.useForm<{role:string[]}>()
     const [updateId, setUpdateId] = useState<string | null>(null)
     const [visibleRole, setVisibleRole] = useState(false)
     const [options, setOptions] = useState<SelectProps['options']>([]);
@@ -46,6 +46,11 @@ const UserOptions: React.FC = () => {
                     onClick={() => {
                         setVisibleRole(true)
                         roleListApi()
+                        setUpdateId(item._id)
+                        console.log(item)
+                        roleSelect.setFieldsValue({
+                            role:item.role
+                        })
                     }}
                 >分配角色</Button>
                 <Button size={"small"} disabled={item.username === "root"} onClick={() => {
@@ -77,7 +82,10 @@ const UserOptions: React.FC = () => {
                     </Button>
                 </Popconfirm>
             </div>
-            item.avator = item.avator ? <img src={item.avator as string} alt=""/> : item.username
+            item.avator = item.avator ?<Image
+                    width={40}
+                    src={item.avator as string}
+                />: item.username
             item.status = <Switch disabled={item.username === "root"} checked={!!item.status}
                                   onChange={(e) => onChange(e, item._id)}/>
             item.lastOnlineTime = item.lastOnlineTime ? new Date(item.lastOnlineTime).toLocaleString() : '-'
@@ -141,43 +149,56 @@ const UserOptions: React.FC = () => {
         setVisible(false)
     }
     const roleOk = async () => {
-        const value = await poleSelect.validateFields()
-        console.log(value)
-        message.success("分配成功")
+        const value = await roleSelect.validateFields()
+        console.log(value,updateId)
+        const res = await userOptionUpdateApi({id:updateId as string,...value})
+        if(res.data.code === 200){
+            message.success("分配成功")
+            listApi()
+        }else {
+            message.success(res.data.msg)
+        }
         setVisibleRole(false)
     }
-    const columns = [
+    const columns:TableProps<userOptionsType>["columns"] = [
         {
+            align:"center",
             title: '头像',
             dataIndex: 'avator',
             key: 'avator',
         },
         {
+            align:"center",
             title: '是否禁用',
             dataIndex: 'status',
             key: 'status',
         },
         {
+            align:"center",
             title: '用户名',
             dataIndex: 'username',
             key: 'username',
         },
         {
+            align:"center",
             title: '密码',
             dataIndex: 'password',
             key: 'password',
         },
         {
+            align:"center",
             title: '最近登录',
             dataIndex: 'lastOnlineTime',
             key: 'lastOnlineTime',
         },
         {
+            align:"center",
             title: '创建人',
             dataIndex: 'creator',
             key: 'creator',
         },
         {
+            align:"center",
             title: '操作',
             dataIndex: 'action',
             key: 'action',
@@ -210,7 +231,7 @@ const UserOptions: React.FC = () => {
     };
     useEffect(() => {
         if (!visibleRole) {
-            poleSelect.resetFields()
+            roleSelect.resetFields()
         }
     }, [visibleRole])
     useEffect(() => {
@@ -233,9 +254,9 @@ const UserOptions: React.FC = () => {
                 okText="确定"
                 className={style.modal}
             >
-                <Form form={poleSelect}>
+                <Form form={roleSelect}>
                     <Form.Item
-                        name="pole"
+                        name="role"
                         wrapperCol={{span: 18}}
                     >
                         <Select
@@ -249,7 +270,7 @@ const UserOptions: React.FC = () => {
                     </Form.Item>
                 </Form>
             </Modal>
-            <h3>用户管理</h3>
+            <h2>用户管理</h2>
             <div className={style.main}>
                 <div className={style.add}>
                     <Button

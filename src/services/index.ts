@@ -1,34 +1,36 @@
 import {
-  LoginResponse,
-  code,
-  LoginParams,
-  ExamListResponse,
-  ExamDetailParams,
-  ExamDetailRespanse,
-  ExamRemoveRespanse,
-  ExamUpdateParams,
-  ExamUpdateRespanse,
-  UserListResponse,
-  ClassifyListResponse,
-  QuestionListResponse,
-  CreateExamParams,
-  CreateExamResponse,
-  userOptionsCreate,
-  userOptionsSearch,
-  systemCreatePole,
-  systemRoleType,
-  BaseResponse,
+    LoginResponse,
+    code,
+    LoginParams,
+    ExamListResponse,
+    ExamDetailParams,
+    ExamDetailRespanse,
+    ExamRemoveRespanse,
+    ExamUpdateParams,
+    ExamUpdateRespanse,
+    UserListResponse,
+    ClassifyListResponse,
+    QuestionListResponse,
+    CreateExamParams,
+    CreateExamResponse,
+    userOptionsCreate,
+    userOptionsSearch,
+    systemCreatePole,
+    systemRoleType,
+    BaseResponse,
+    QuestionTypeResponse,
+    
 } from '../types/api'
 import {
-  // classAllList,
-  editClassType,
-  // classParams,
-  findStudentType,
-  classListResponse,
-  createClassType,
-  createStudentType,
-  saveStudentType,
-  findClassType,
+    classListResponse,
+    createClassType,
+    createStudentType,
+    saveStudentType,
+    findClassType,
+    findStudentType,
+    editClassType,
+
+    
 } from '../types/api/classAndStudent.ts'
 import request from './request.tsx'
 //验证码
@@ -36,8 +38,8 @@ export const captchaApi = () => {
   return request.get<code>('/login/captcha')
 }
 //登录
-export const loginApi = (params: LoginParams) => {
-  return request.post<LoginResponse>('/login', params)
+export const loginApi = (params:LoginParams) => {
+    return request.post<LoginResponse>('/login', params)
 }
 export const loginStudentApi = (params: LoginParams) => {
   return request.post<LoginResponse>('/login/student', params)
@@ -70,13 +72,23 @@ export const userListApi = () => {
 export const classifyListApi = () => {
   return request.get<ClassifyListResponse>('/classify/list')
 }
+// 试题列表
+export const questionListApi = () => {
+    return request.get<QuestionListResponse>(`/question/list`)
+}
+
+// 试题类型
+export const questionTypeApi = () => {
+    return request.get<QuestionTypeResponse>(`/question/type/list`)
+}
+
 //试题筛选
-export const questionListSearchApi = (params: string) => {
-  return request.get<QuestionListResponse>(`/question/list?classify=${params}`)
+export const questionListSearchApi = (params:string) => {
+    return request.get<QuestionListResponse>(`/question/list?classify=${params}`)
 }
 // 试题新建
-export const createExamApi = (params: CreateExamParams) => {
-  return request.post<CreateExamResponse>(`/exam/create?${Date.now()}`, params)
+export const createExamApi = (params:CreateExamParams) => {
+    return request.post<CreateExamResponse>(`/exam/create?${Date.now()}`,params)
 }
 // 班级列表&&//查询班级列表
 //https://zyxcl.xyz/exam_api/studentGroup/list?page=1&pagesize=5&teacher=svip
@@ -97,13 +109,15 @@ export const classRemoveApi = (id: string) => {
 export const calssEditApi = (time: number, params: editClassType) => {
   return request.post<BaseResponse>(`/studentGroup/update?${time}`, params)
 }
+ 
 // 新建班级列表  /studentGroup/create
-export const calssCreateApi = (time: number, params: createClassType) => {
-  return request.post<BaseResponse>(`/studentGroup/create?${time}`, params)
+export const  calssCreateApi = (time: any, params:createClassType) => {
+    return request.post<any>(`/studentGroup/create?${time}`,params)
 }
 //新建学生列表  `/student/create${time}`,value   createStudentType
-export const studentCreateApi = (time: number, params: createStudentType) => {
-  return request.post<BaseResponse>(`/student/create?${time}`, params)
+
+export const  studentCreateApi = (time: any, params: createStudentType) => {
+    return request.post<any>(`/student/create?${time}`,params)
 }
 //编辑学生列表
 export const studentEditApi = (eee: number, params: saveStudentType) => {
@@ -116,17 +130,8 @@ export const studentRemoveApi = (id: string) => {
 }
 //用户信息
 // https://zyxcl.xyz/exam_api/user/list  time: number, value: 
-export const calssUserApi = () => {
-  return request.get('/user/list')
-}
-// 获取学生信息中的班级信息
-// https://zyxcl.xyz/exam_api/studentGroup/list?page=1&pagesize=5
-export const StudentInfoApi = () => {
-  return request.get('studentGroup/list')
-}
-// classify/list 获取科目信息
-export const calssifyClassApi = () => {
-  return request.get<classListResponse>('/classify/list')
+export const  calssUserApi = () => {
+    return request.get<classListResponse>('/user/list')
 }
 //用户管理
 export const userOptionApi = () => {
@@ -164,12 +169,22 @@ export const systemCreateRoleApi = (params: systemCreatePole) => {
 export const systemDelRoleApi = (id: string) => {
   return request.post('/role/remove', { id })
 }
-//权限菜单
+//用户左侧权限
 export const systemMenuListApi = () => {
   return request.get('/user/menulist',)
 }
 //角色权限更新
 // role/update
-export const systemRoleApi = (params: systemRoleType) => {
-  return request.post('/role/update', params)
+export const systemRoleApi = (params:systemRoleType) => {
+    return request.post('/role/update',params)
+}
+// classify/list 科目
+export const  calssifyClassApi = () => {
+    return request.get<classListResponse>('/classify/list')
+}
+
+// 获取学生信息中的班级信息
+// https://zyxcl.xyz/exam_api/studentGroup/list?page=1&pagesize=5
+export const  StudentInfoApi = () => {
+    return request.get('studentGroup/list')
 }

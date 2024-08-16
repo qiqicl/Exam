@@ -172,6 +172,7 @@ const Aside: React.FC<Props> = (props) => {
     setBeadCrumb(() => [{
       title: <Link to="/home">主页</Link>,
     }])
+    console.log(location.pathname)
     pathName.current = location.pathname.split('/').filter(i => i)
     // console.log(location.pathname.split('/').filter(i => i))
     const breadcrumb_item_add :  BreadCrumbItem = pathName.current.map((item, index) => {
@@ -218,6 +219,7 @@ const Aside: React.FC<Props> = (props) => {
               defaultOpenKeys={defaultOpenKeys}
               style={{ height: "100%" }}
               items={items}
+              selectedKeys={[location.pathname]}
             />
           </Sider>
           <Content style={{ padding: '0', height: "100%", width: "100%" ,display:"flex",flexDirection:"column"}}>

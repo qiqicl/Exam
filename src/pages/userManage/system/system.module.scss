@@ -2,7 +2,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  h3{
+  h2{
     line-height: 30px;
     height: 50px;
     padding: 10px;
@@ -26,8 +26,8 @@
 }
 .action{
   display: flex;
-  width: 130px;
-  justify-content: space-between;
+  width: 100%;
+  justify-content: space-around;
 }
 .modal{
   position: fixed;
