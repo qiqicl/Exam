@@ -37,6 +37,7 @@ const Aside: React.FC<Props> = (props) => {
     const userInfo = useAppSelector(state => state.user.userInfo)
     const [items,setItems] = useState<MenuItem[]>()
     const [forceUpdate,setForceUpdate] = useState(0)
+    const [load,setLoad] = useState(false)
     const [beadCrumb, setBeadCrumb] = useState<BreadCrumbItem>([
         {
             title: <Link to="/home">Home</Link>,
@@ -117,7 +118,7 @@ const Aside: React.FC<Props> = (props) => {
                     }
                 })
                 return {
-                    key: index + 1,
+                    key: (index + 1) + "",
                     label: item.name,
                     icon: item.name === "试卷管理" ? <CopyOutlined/> :
                         item.name === "试题管理" ? <DiffOutlined/> :
@@ -128,8 +129,19 @@ const Aside: React.FC<Props> = (props) => {
             }
         })
         console.log(data?.filter(item=>!!item))
-        setItems(data?.filter(item=>!!item))
+        const list = data?.filter(item=>!!item)
+        const res = list?.map((item,index)=>{
+            return {
+                ...item,
+                key:(index+1)+''
+            }
+        })
+        console.log(res)
+        setItems(res)
         setForceUpdate(forceUpdate + 1)
+        if(userInfo.permission){
+            setLoad(true)
+        }
     },[userInfo])
 
     return (
@@ -168,7 +180,7 @@ const Aside: React.FC<Props> = (props) => {
                             selectedKeys={[location.pathname]}
                         />
                     </Sider>
-                    <Content
+                    {load?<Content
                         style={{padding: '0', height: "100%", display: "flex", flexDirection: "column"}}>
                         <Breadcrumb
                             style={{margin: "16px 10px"}}
@@ -177,7 +189,7 @@ const Aside: React.FC<Props> = (props) => {
                         <div style={{flex: 1}}>
                             {props.children}
                         </div>
-                    </Content>
+                    </Content>:<div>加载中</div>}
                 </Layout>
             </Content>
         </div>
