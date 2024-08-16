@@ -1,37 +1,51 @@
-.addClass{
-    position: fixed;
-    z-index: 5;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    width: 100vw;
-    background: rgba($color: #000000, $alpha: .4);
-}
-.addClassInter{
-    float: right;
-    height: 100vh;
-    width: 600px;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-}
-.addConHeader, .addConFooter{
-    display: flex;
-    width: 100%;
-    height: 60px;
-    line-height: 60px;
-    font-size: 20px;
-    padding-left: 20px;
-    border-bottom: 1px solid #ccc;
+.title {
+  padding: 10px;
+  background: #fff;
 }
 
-.addConMain{
-    flex: 1;
-    padding: 50px 100px;
+.classCon {
+  padding: 20px 100px 0;
+  // background: #F0F2F5;
 }
-.addConFooter{
-    border-bottom: 0!important;
-    border-top: 1px solid #ccc;
-    padding-right: 20px;
-    justify-content: flex-end;
+
+.addClass {
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba($color: #000000, $alpha: .4);
+}
+
+.addClassInter {
+  float: right;
+  height: 100vh;
+  width: 600px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.addConHeader,
+.addConFooter {
+  display: flex;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  font-size: 20px;
+  padding-left: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.addConMain {
+  flex: 1;
+  padding: 50px 100px;
+}
+
+.addConFooter {
+  border-bottom: 0 !important;
+  border-top: 1px solid #ccc;
+  padding-right: 20px;
+  justify-content: flex-end;
 }

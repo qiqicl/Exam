@@ -225,7 +225,7 @@ const Aside: React.FC<Props> = (props) => {
               style={{ margin: "16px 10px" }}
               items={beadCrumb}
             ></Breadcrumb>
-            <div style={{flex:1}}>
+            <div style={{flex:1, background: '#F0F2F5'}}>
               {props.children}
             </div>
           </Content>
