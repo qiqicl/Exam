@@ -65,7 +65,7 @@ const PaperBank = () => {
     getExamList()
   }
 
-  const isUpdate = async (id:string,index:number) => {
+  const isUpdate = async (index:number) => {
     const newList = structuredClone(list)
     newList.forEach(i => {
       i.isUpdateNow = false
@@ -143,7 +143,7 @@ const PaperBank = () => {
             <a onClick={() => {cancel()}} style={{color:"#4096ff"}}>取消</a>
           </Space>:
           <Space size="middle">
-            <Button size="small" type="primary" style={{fontSize:"12px"}} onClick={() => {isUpdate(record._id,index)}}>编辑</Button>
+            <Button size="small" type="primary" style={{fontSize:"12px"}} onClick={() => {isUpdate(index)}}>编辑</Button>
             <Popconfirm
             title="删除"
             description="是否删除此试卷"
