@@ -209,9 +209,10 @@ export type userOptionsType = {
 export type userOptionsCreate = {
     username?: string | JSX.Element,
     password?: string | JSX.Element,
-    status: number | string | JSX.Element,
+    status?: number | string | JSX.Element,
     check?: string | JSX.Element,
-    id?: string
+    id?: string,
+    role?:string[]
 }
 //用户搜索
 export type userOptionsSearch = {
@@ -252,8 +253,8 @@ export type systemMenuListType = {
     editable?: boolean
 }
 export type systemMenuListChildren = {
-    key: string,
-    name: string,
+    key?: string,
+    name?: string,
     disabled?: boolean,
     _id?: string,
     id?: string,
@@ -263,7 +264,8 @@ export type systemMenuListChildren = {
     action?: JSX.Element,
     width?: string,
     align?: string,
-    editable?: boolean
+    editable?: boolean,
+    pid?:string,
 }
 //角色权限更新
 export type systemRoleType = {
@@ -364,4 +366,5 @@ export type systemUpdateInfoType = {
     email?: string,
     sex?: string,
     username?: string,
+    permission:systemMenuListChildren[]
 }

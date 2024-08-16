@@ -102,6 +102,7 @@ const PaperBank = () => {
 
   const columns: TableProps<DataType>['columns'] = [
     {
+      align:"center",
       title: '试卷名称',
       dataIndex: 'name',
       key: 'name',
@@ -112,27 +113,32 @@ const PaperBank = () => {
       )
     },
     {
+      align:"center",
       title: '科目类型',
       dataIndex: 'classify',
       key: 'classify',
     },
     {
+      align:"center",
       title: '总分',
       dataIndex: 'mark',
       key: 'mark',
       width:100
     },
     {
+      align:"center",
       title: '创建人',
       key: 'creator',
       dataIndex: 'creator',
     },
     {
+      align:"center",
       title: '创建时间',
       key: 'createTime',
       dataIndex: 'createTime',
     },
     {
+      align:"center",
       title: '操作',
       key: 'action',
       fixed: 'right',

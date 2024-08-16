@@ -1,12 +1,12 @@
 import React from 'react';
-import {Outlet} from "react-router-dom";
-
+import { Outlet } from "react-router-dom";
+import style from './Manage-group.module.scss'
 const ManageGroup = () => {
-    return (
-        <div>
-            <Outlet/>
-        </div>
-    );
+  return (
+    <div className={style.out}>
+      <Outlet />
+    </div>
+  );
 };
 
 export default ManageGroup;

@@ -1,70 +1,134 @@
 import React, { useEffect, useState } from 'react';
 import style from './group-list.module.scss'
-import {  classAllList, userClassType, classifyType, createClassType } from '../../../types/api/classAndStudent'
-import { classListApi, classRemoveApi, calssUserApi, calssifyClassApi, calssCreateApi } from '../../../services/index'
+import { classAllList, userClassType, classifyType, createClassType, editClassType } from '../../../types/api/classAndStudent'
+import { classRemoveApi, calssUserApi, calssifyClassApi, calssCreateApi, calssEditApi, classFindApi, StudentInfoApi } from '../../../services/index'
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Space, message, Form, Input, Select } from 'antd';
 import { useRef } from 'react';
-// import request from 'umi-request';
 
 const GroupList = () => {
   const [classFlag, setClassFalg] = useState(false)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [pagesize, setPageSize] = useState(5)
-  const classRef = useRef()
-  const [editClassList, setEditClassList] = useState<classAllList[]>([])
+  const [curLength, setCurLength] = useState<number>()
+  const [classList, setClassList] = useState<classAllList[]>([])
   const [userClassList, setUserClassList] = useState<userClassType[]>([])
   const [ClassifyList, setClassifyList] = useState<classifyType[]>([])
   const [form] = Form.useForm()
   const [fouceUpdate, setfouceUpdate] = useState(0)
+  const filterParams = useRef<editClassType>({} as editClassType)
 
-
-  const userClassApi = async() => {
+  const userClassApi = async () => {
     const res = await calssUserApi()
     setUserClassList(res.data.data.list)
     console.log(userClassList);
   }
-  const calssifyApi = async() => {
+  const calssifyApi = async () => {
     const res = await calssifyClassApi()
     setClassifyList(res.data.data.list)
-    console.log(ClassifyList);
+  }
+  const calssAll = async () => {
+    const res = await StudentInfoApi()
+    setClassList(res.data.data.list);
+
   }
   useEffect(() => {
     userClassApi()
     calssifyApi()
-  },[])
-  const fouceUpd =() => {
-  setfouceUpdate(fouceUpdate+1)
+    calssAll()
+  }, [])
+
+  const uniqueArray: classifyType[] = ClassifyList.reduce((prev: classifyType[], current) => {
+    if (!prev.some(item => item.name === current.name)) {
+      prev.push(current)
+    }
+    return prev;
+  }, []);
+  const resetKeyVal = uniqueArray.reduce((prev: any, { name }: any) => {
+    prev[name] = name;
+    return prev;
+  }, {});
+  //老师名字去重并且格式化
+  const teacherArray: userClassType[] = userClassList.reduce((prev: userClassType[], current) => {
+    if (!prev.some(item => item.username === current.username)) {
+      prev.push(current)
+    }
+    return prev;
+  }, []);
+  const resetteacherKeyVal = teacherArray.reduce((prev: any, { username }: any) => {
+    prev[username] = username;
+    return prev;
+  }, {});
+  //班级格式化
+  const resetClassKeyVal = classList.reduce((prev: any, { name }: any) => {
+    prev[name] = name
+    return prev;
+  }, {});
+
+  const fouceUpd = () => {
+    setfouceUpdate(fouceUpdate + 1)
   }
   const changeFlag = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (e.target === classRef.current) {
+    if (e.target === e.currentTarget) {
       setClassFalg(!classFlag)
     }
   }
   const changeFlag1 = () => {
     setClassFalg(!classFlag)
   }
-  const classsSave = (id: string, render: classAllList[]) => {
-    console.log(id, render);
+  //编辑班级列表
+  const classSave = async (time: number) => {
+    const res = await calssEditApi(time, filterParams.current)
+    console.log(res);
+
   }
-  const classDelete = async (time: number, id: string) => {
-      const res = await classRemoveApi(time, id);
-      console.log(res);
-      if (res.data.code === 200) {
-        message.success('删除成功')
-      } else {
-        message.error('删除失败：' + res.data.msg);
+  //获取部分编辑数据
+  const getPartParams = (record: classAllList) => {
+    filterParams.current = {
+      id: record._id,
+      classify: record.classify,
+      name: record.name,
+      students: record.students,
+      teacher: record.teacher,
+    }
+  }
+  //删除班级列表
+  const classDelete = async (id: string) => {
+    const res = await classRemoveApi(id);
+    console.log(res);
+    if (res.data.code === 200) {
+      message.success('删除成功')
+      const c = await classFindApi({ page, pagesize })
+      setCurLength(c.data.data.list.length)
+      if (c.data.data.list.length === 0) {
+        setPage(page - 1)
       }
+      fouceUpd()
+    } else {
+      message.error(res.data.msg)
+    }
   };
-  const createInfo = async(d: number) => {
+  //添加用户列表
+  const createInfo = async (d: number) => {
     const value: createClassType = await form.validateFields()
-    const res = await calssCreateApi(d, {...value, students: []})
-    fouceUpd()
+    const res = await calssCreateApi(d, { ...value, students: [] })
+    if (res.data.code === 200) {
+      message.success('创建成功')
+      // fouceUpd()
+      const c = await classFindApi({ page, pagesize })
+      setCurLength(c.data.data.list.length)
+      if (c.data.data.list.length > 5) {
+        setPage(page + 1)
+      }
+      fouceUpd()
+    } else {
+      message.error(res.data.msg)
+    }
     setClassFalg(!classFlag)
-    
+
   }
   const columns: ProColumns<classAllList>[] = [
     {
@@ -78,13 +142,18 @@ const GroupList = () => {
       title: '班级名称',
       dataIndex: 'name',
       filters: true,
-      onFilter: true,
+      onFilter: (value, record) => record.name === value,
       copyable: true,
       ellipsis: true,
+      valueType: 'select',
+      valueEnum: resetClassKeyVal,
     },
     {
       title: '老师',
       dataIndex: 'teacher',
+      filters: true,
+      onFilter: (value, record) => record.teacher === value,
+      valueEnum: resetteacherKeyVal,
       formItemProps: {
         rules: [
           {
@@ -97,13 +166,12 @@ const GroupList = () => {
     {
       title: '科目类别',
       dataIndex: 'classify',
+      filters: true,
+      onFilter: (value, record) => record.classify === value,
       copyable: true,
       ellipsis: true,
       valueType: 'select',
-      valueEnum: {
-        all: { text: '超长'.repeat(50) }
-        
-      }
+      valueEnum: resetKeyVal
     },
     {
       title: '创建时间',
@@ -112,26 +180,13 @@ const GroupList = () => {
       valueType: 'date',
       sorter: true,
       hideInSearch: true,
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      valueType: 'dateRange',
-      hideInTable: true,
-      search: {
-        transform: (value) => {
-          return {
-            startTime: value[0],
-            endTime: value[1],
-          };
-        },
-      },
+      editable: false
     },
     {
       title: '操作',
       valueType: 'option',
       key: 'option',
-      render: (text, record, _, action) => [
+      render: (_text, record, _, action) => [
         <a
           key="editable"
           onClick={() => {
@@ -149,15 +204,24 @@ const GroupList = () => {
 
   const actionRef = useRef<ActionType>();
   return (
-    <div className="classCon" key={fouceUpdate}>
+    <div key={fouceUpdate} className={style.all}>
+      <div className={style.title}>
+        <h2>班级列表</h2>
+      </div>
       <ProTable<classAllList>
+        className={style.classCon}
         columns={columns}
         actionRef={actionRef}
         cardBordered
-        request={async (params, sorter, filter) => {
+        request={async (filter) => {
           // 表单搜索项会从 params 传入，传递给后端接口
-          console.log(params, sorter, filter);
-          const res = await classListApi({ page, pagesize })
+          const res = await classFindApi({
+            page,
+            pagesize,
+            name: filter.name,
+            teacher: filter.teacher,
+            classify: filter.classify,
+          })
           setTotal(res.data.data.total)
           return Promise.resolve({
             data: res.data.data.list,
@@ -166,10 +230,13 @@ const GroupList = () => {
         }}
         editable={{
           type: 'multiple',
-          onSave: classsSave,
-          onDelete: (key: any, row) => {
-            console.log(key, row);
-            classDelete(row.createTime, row._id)
+          onSave: async (_key, record: classAllList) => {
+            getPartParams(record)
+            classSave(Date.now())
+
+          },
+          onDelete: async (_key: any, row) => {
+            classDelete(row._id)
           },
         }}
         columnsState={{
@@ -178,8 +245,7 @@ const GroupList = () => {
           defaultValue: {
             option: { fixed: 'right', disable: true },
           },
-          onChange(value) {
-            console.log('value: ', value);
+          onChange(_value) {
           },
         }}
         rowKey="_id"
@@ -208,11 +274,13 @@ const GroupList = () => {
           pageSizeOptions: [5, 10, 15, 20],
           pageSize: pagesize,
           showSizeChanger: true,
-          onChange: (page, pageSize) => {
-            setPage(page)
-            setPageSize(pageSize)
-            classListApi({ page, pagesize })
-            console.log(page, pageSize)
+          onChange: (page, pagesize) => {
+            console.log(curLength);
+            setPageSize(pagesize)
+            if (curLength !== 0) {
+              setPage(page)
+            }
+            console.log(page, pagesize)
           },
         }}
         dateFormatter="string"
@@ -232,7 +300,7 @@ const GroupList = () => {
         ]}
       />
       {classFlag ?
-        <div className={style.addClass} ref={classRef} onClick={changeFlag}>
+        <div className={style.addClass} onClick={changeFlag}>
           <div className={style.addClassInter}>
             <div className={style.addConHeader}>
               <Space>
@@ -266,7 +334,7 @@ const GroupList = () => {
                 </Form.Item>
                 <Form.Item label="科目类别" name="classify">
                   <Select>
-                    {ClassifyList.map(item => <Select.Option value={item.name}>{item.name}</Select.Option>)}
+                    {uniqueArray.map(item => <Select.Option value={item.name} key={item._id}>{item.name}</Select.Option>)}
                   </Select>
                 </Form.Item>
               </Form>
