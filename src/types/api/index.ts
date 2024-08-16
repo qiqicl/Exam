@@ -310,7 +310,12 @@ export type listResponse = {
     endTime: string
 
 }
-export type RowResponse = Omit<listResponse, 'code | msg'>
+
+
+export type RowResponse = listResponse & {
+  url:string
+}
+
 
 
 // match的数据类型
@@ -322,24 +327,43 @@ export interface matchResponse {
     createTime: number;
     classify: string;
     _id: string;
+
 }
 
 // match2的数据类型
 export interface match2Response {
-    key: string;
-    name: string;
-    class: string;
-    creator: string;
-    createTime: number
+  key: string;
+  name: string;
+  class: string;
+  creator: string;
+  createTime: number | string
 }
+export interface formDataType {
+  name: string;
+  classify:string;
+  examiner:string;
+  group:string;
+  startTime:string;
+  endTime:string;
+  examId:string
+  dateTimeRange:string[]
+}
+
 
 // examList 数据类型
 export interface examListResponse {
-    classify: string;
-    createTime: number;
-    creator: string;
-    name: string;
-    _id: string;
+  classify:string;
+  createTime:string;
+  creator:string;
+  endTime:string;
+  startTime:string;
+  examId:string;
+  examiner: string[];
+  group:[];
+  name:string;
+  status:number;
+  _id:string;
+  __v:number;
 }
 
 export interface examinerType {
@@ -367,4 +391,30 @@ export type systemUpdateInfoType = {
     sex?: string,
     username?: string,
     permission:systemMenuListChildren[]
+}
+export interface examListResponse {
+  code:number;
+  data:{
+    list:[];
+    total:number;
+    totalPage: number;
+  }
+  msg:string;
+}
+// 创建试卷返回的结果类型
+export interface createTestType {
+  classify:string;
+  endTime:string;
+  examId:string;
+  examiner:string;
+  group:string;
+  name:string;
+  startTime:string;
+}
+
+export interface listType {
+  examiner:string[]|string;
+  startTime:string;
+  createTime:string;
+  endTime:string;
 }

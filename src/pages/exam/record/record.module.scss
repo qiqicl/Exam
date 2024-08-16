@@ -1,8 +1,8 @@
 .wrap {
-  width: 100%;
-  height: 100vh;
+  height: 100%;
   background: #F0F2F5;
-  overflow-y: auto;
+  padding:0 20px;
+  // overflow-y: auto;
 }
 .head {
   width: 100%;
@@ -28,4 +28,7 @@
       margin-top: 10px;
     }
   }
+}
+.table{
+  height: 500px;
 }
