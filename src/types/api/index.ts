@@ -71,28 +71,28 @@ export type examListSearchParams = {
 }
 
 // 试题列表
-export type QuestionItem  =  {
-  _id: string,
-  question: string,
-  type: "1"|"2"|"3"|"4",
-  classify: string,
-  answer: string,
-  options: string[],
-  desc: string,
-  __v: number,
-  checked?:boolean,
-  key:string
+export type QuestionItem = {
+    _id: string,
+    question: string,
+    type: "1" | "2" | "3" | "4",
+    classify: string,
+    answer: string,
+    options: string[],
+    desc: string,
+    __v: number,
+    checked?: boolean,
+    key: string
 }
 export type QuestionListResponse = {
-  code: number,
-  msg: string,
-  data: {
-    total: number,
-    list: QuestionItem[],
-    page?: number,
-    pagesize?: number,
-    totalPage?: number
-  }
+    code: number,
+    msg: string,
+    data: {
+        total: number,
+        list: QuestionItem[],
+        page?: number,
+        pagesize?: number,
+        totalPage?: number
+    }
 }
 
 // 试卷详情
@@ -224,8 +224,8 @@ export type systemPoleList = {
     createTime: string | '',
     key: number,
     action: JSX.Element,
-    width?:string,
-    align?:string,
+    width?: string,
+    align?: string,
 }
 //创建角色
 export type systemCreatePole = {
@@ -244,7 +244,7 @@ export type systemMenuListType = {
     createTime?: string,
     action?: JSX.Element,
     children: systemMenuListChildren[],
-    editable?:boolean
+    editable?: boolean
 }
 export type systemMenuListChildren = {
     key: string,
@@ -256,9 +256,9 @@ export type systemMenuListChildren = {
     isBtn?: boolean | string,
     createTime?: string,
     action?: JSX.Element,
-    width?:string,
-    align?:string,
-    editable?:boolean
+    width?: string,
+    align?: string,
+    editable?: boolean
 }
 //角色权限更新
 export type systemRoleType = {
@@ -279,75 +279,84 @@ export type menuManageCreateType = {
     path: string,
     pid: string,
 }
+
 //
 export interface DataType {
-  key: React.Key;
-  name: string;
-  class: string;
-  creator: string;
-  createTime: string
+    key: React.Key;
+    name: string;
+    class: string;
+    creator: string;
+    createTime: string
 }
 
 // 调考试记录 最里面的值
 export type listResponse = {
-  id:string,
-  name:string,
-  classify:string,
-  creator:string,
-  createTime:string,
-  status:number,
-  examiner:string,
-  group:Array<string>[],
-  startTime:string,
-  endTime:string
+    id: string,
+    name: string,
+    classify: string,
+    creator: string,
+    createTime: string,
+    status: number,
+    examiner: string,
+    group: Array<string>[],
+    startTime: string,
+    endTime: string
 
 }
-export type RowResponse = Omit<listResponse,'code | msg'>
+export type RowResponse = Omit<listResponse, 'code | msg'>
 
 
 // match的数据类型
 export interface matchResponse {
-  key:string;
-  name:string;
-  class:string;
-  creator:string;
-  createTime:number;
-  classify:string;
-  _id:string;
+    key: string;
+    name: string;
+    class: string;
+    creator: string;
+    createTime: number;
+    classify: string;
+    _id: string;
 }
 
 // match2的数据类型
 export interface match2Response {
-  key:string;
-  name:string;
-  class:string;
-  creator:string;
-  createTime:number
+    key: string;
+    name: string;
+    class: string;
+    creator: string;
+    createTime: number
 }
 
 // examList 数据类型
 export interface examListResponse {
-  classify:string;
-  createTime:number;
-  creator:string;
-  name:string;
-  _id:string;
+    classify: string;
+    createTime: number;
+    creator: string;
+    name: string;
+    _id: string;
 }
 
 export interface examinerType {
-  examiner: string[]; // 确保 examiner 是一个字符串数组
+    examiner: string[]; // 确保 examiner 是一个字符串数组
 }
 
 //试题题型列表
 export type QuestionTypeResponse = {
-  code: number,
-  msg: string,
-  data: {
-    list:
-    {
-      _id: string,
-      name: string,
-      value: number
-    }[]
-  }
+    code: number,
+    msg: string,
+    data: {
+        list:
+            {
+                _id: string,
+                name: string,
+                value: number
+            }[]
+    }
+}
+//修改用户信息
+export type systemUpdateInfoType = {
+    avator?: string,
+    age?: number,
+    email?: string,
+    sex?: string,
+    username?: string,
 }

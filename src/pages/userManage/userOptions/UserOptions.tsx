@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import style from './userOptions.module.scss'
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space, Popconfirm, TableProps} from 'antd';
+import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space, Popconfirm, TableProps,Image} from 'antd';
 import {userOptionsType, userOptionsCreate} from '../../../types/api/index'
 import type {SelectProps, PopconfirmProps} from 'antd';
 import {
@@ -77,7 +77,10 @@ const UserOptions: React.FC = () => {
                     </Button>
                 </Popconfirm>
             </div>
-            item.avator = item.avator ? <img src={item.avator as string} alt=""/> : item.username
+            item.avator = item.avator ?<Image
+                    width={40}
+                    src={item.avator as string}
+                />: item.username
             item.status = <Switch disabled={item.username === "root"} checked={!!item.status}
                                   onChange={(e) => onChange(e, item._id)}/>
             item.lastOnlineTime = item.lastOnlineTime ? new Date(item.lastOnlineTime).toLocaleString() : '-'

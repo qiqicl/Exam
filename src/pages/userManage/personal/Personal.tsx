@@ -1,44 +1,18 @@
-import React,{useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import style from "./personal.module.scss";
-import {message, Upload,Table} from 'antd';
+import {message, Upload, Descriptions, Button, Modal, Form, Input, InputNumber, Select} from 'antd';
 import ImgCrop from 'antd-img-crop';
-import type {GetProp, UploadProps, UploadFile} from 'antd';
-import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
+import type {GetProp, UploadProps, UploadFile,DescriptionsProps} from 'antd';
+import {PlusOutlined} from '@ant-design/icons';
+import {systemAvatarApi, systemUpdateInfoApi, userInfoApi} from "../../../services";
+import {systemUpdateInfoType} from "../../../types/api";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const Personal: React.FC = () => {
-    const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState<string>();
-    const getBase64 = (img: FileType, callback: (url: string) => void) => {
-        const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result as string));
-        reader.readAsDataURL(img);
-    };
-    const beforeUpload = (file: FileType) => {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
-        }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            message.error('Image must smaller than 2MB!');
-        }
-        console.log(isJpgOrPng && isLt2M)
-        return isJpgOrPng && isLt2M;
-    };
-    const handleChange: UploadProps['onChange'] = (info) => {
-        console.log('handleChange', info)
-        if (info.file.status === 'uploading') {
-            setLoading(true);
-            return;
-        }
-        if (info.file.status === 'done') {
-            getBase64(info.file.originFileObj as FileType, (url) => {
-                setLoading(false);
-                setImageUrl(url);
-            });
-        }
-    };
+    const [avatar,setAvatar] = useState<string>()
+    const [userInfo,setUserInfo] = useState<systemUpdateInfoType>()
+    const [form] = Form.useForm()
+    const [visible, setVisible] = useState(false)
     const onPreview = async (file: UploadFile) => {
         console.log(file)
         let src = file.url as string;
@@ -54,72 +28,167 @@ const Personal: React.FC = () => {
         const imgWindow = window.open(src);
         imgWindow?.document.write(image.outerHTML);
     };
-    const uploadButton = (
-        <button style={{border: 0, background: 'none'}} type="button">
-            {loading ? <LoadingOutlined/> : <PlusOutlined/>}
-            <div style={{marginTop: 8}}>Upload</div>
-        </button>
-    )
-    const dataSource = [
+    const items: DescriptionsProps['items'] = [
         {
             key: '1',
-            name: '胡彦斌',
-            age: 32,
-            address: '西湖区湖底公园1号',
+            label: '用户名称',
+            children: userInfo?.username?userInfo?.username:'-',
         },
         {
             key: '2',
-            name: '胡彦祖',
-            age: 42,
-            address: '西湖区湖底公园1号',
+            label: '性别',
+            children: userInfo?.sex?userInfo?.sex:'-',
         },
-    ];
+        {
+            key: '3',
+            label: '年龄',
+            children: userInfo?.age?userInfo?.age:'-',
+        },
+        {
+            key: '4',
+            label: '邮箱地址',
+            children: userInfo?.email?userInfo?.email:'-',
+        },
 
-    const columns = [
-        {
-            title: '姓名',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: '年龄',
-            dataIndex: 'age',
-            key: 'age',
-        },
-        {
-            title: '住址',
-            dataIndex: 'address',
-            key: 'address',
-        },
     ];
-
+    const handleCancel = () => {
+        setVisible(false)
+        message.error('取消');
+    }
+    const handleOk = async () => {
+        const value = await form.validateFields()
+        console.log(value)
+        const res = await systemUpdateInfoApi(value)
+        if (res.data.code === 200) {
+            message.success(res.data.msg)
+            upDate()
+        } else {
+            message.error(res.data.msg)
+        }
+        setVisible(false)
+    }
+    const upDate = () => {
+        userInfoApi().then(res=>{
+            setAvatar(res.data.data.avator)
+            setUserInfo(res.data.data)
+        })
+    }
+    useEffect(() => {
+        upDate()
+    }, [])
+    useEffect(() => {
+        if (!visible) {
+            form.resetFields()
+        }
+    }, [visible])
     return (
         <div className={style.Personal}>
             <h2>个人信息</h2>
             <div className={style.main}>
                 <div className={style.table}>
-                    <ImgCrop rotationSlider>
+                    <ImgCrop
+                        rotationSlider
+                    >
                         <Upload
+                            action={avatar}
                             name="avatar"
                             listType="picture-card"
                             showUploadList={false}
-                            beforeUpload={beforeUpload}
-                            onChange={handleChange}
-                            customRequest={async (options) => {
-                                console.log(options)
-                                options.onSuccess()
-                            }}
                             onPreview={onPreview}
+                            customRequest={async (options) => {
+                                console.log(options.file)
+                                const data = new FormData()
+                                data.append("avatar",options.file)
+                                systemAvatarApi(data).then(res=>{
+                                    console.log(res.data.data.url)
+                                    systemUpdateInfoApi({avator:res.data.data.url}).then((res)=>{
+                                        if (res.data.code === 200) {
+                                            message.success(res.data.msg)
+                                            userInfoApi().then(res=>{
+                                                setAvatar(res.data.data.avator)
+                                            })
+                                        } else {
+                                            message.error(res.data.msg)
+                                        }
+                                    })
+                                })
+                            }}
                         >
-                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{width: '100%'}}/> : uploadButton}
+                            {avatar?<img src={avatar} alt="avatar" style={{width: '100%'}}/>:<PlusOutlined/>}
                         </Upload>
                     </ImgCrop>
-                    <Table dataSource={dataSource} columns={columns} />;
+                    <div className={style.descriptions}>
+                        <Descriptions bordered items={items} />
+                    </div>
+                    <div className={style.edit}>
+                        <Button
+                            type="primary"
+                            icon={<PlusOutlined/>}
+                            onClick={() => {
+                                setVisible(true)
+                                form.setFieldsValue({
+                                    username: userInfo?.username,
+                                    sex:userInfo?.sex,
+                                    age:userInfo?.age,
+                                    email:userInfo?.email
+                                })
+                            }}
+                        >
+                            点击编辑
+                        </Button>
+                    </div>
                 </div>
-
             </div>
+            <Modal
+                title="编辑"
+                open={visible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                cancelText="取消"
+                okText="确定"
+                className={style.modal}
+            >
+                <Form
+                    labelCol={{span: 4}}
+                    wrapperCol={{span: 20}}
+                    form={form}
+                >
+                    <Form.Item
+                        label="姓名"
+                        name="username"
+                        rules={[{message: '请输入姓名!'}]}
+                    >
+                        <Input placeholder="输入姓名"/>
+                    </Form.Item>
+                    <Form.Item name="sex" label="性别">
+                        <Select
+                            placeholder="选择性别"
+                            allowClear
+                            options={[
+                                {
+                                    value: "男",
+                                    label: '男'
+                                },
+                                {
+                                    value: '女',
+                                    label: '女'
+                                }
+                            ]}
+                        ></Select>
+                    </Form.Item>
+                    <Form.Item name="age" label="年龄" rules={[{ type: 'number'}]}>
+                        <InputNumber placeholder="输入年龄"/>
+                    </Form.Item>
+                    <Form.Item
+                        label="邮箱"
+                        name="email"
+                        rules={[{message: '请输入邮箱!'}]}
+                    >
+                        <Input placeholder="输入邮箱"/>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
-    );
+    )
 };
-
 export default Personal;

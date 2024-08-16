@@ -20,7 +20,7 @@ import {
     systemCreatePole,
     systemRoleType,
     BaseResponse,
-    QuestionTypeResponse
+    QuestionTypeResponse, systemUpdateInfoType
 } from '../types/api'
 import {
     classListResponse,
@@ -225,5 +225,13 @@ export const classifyApi = () => {
 // 考试班级接口 https://zyxcl.xyz/exam_api/studentGroup/list
 export const examBanApi = () => {
   return request.get<any>('/studentGroup/list')
+}
+//更新头像
+export const systemAvatarApi = (params:FormData) => {
+    return request.post('/profile',params)
+}
+//修改用户信息
+export const systemUpdateInfoApi = (params:systemUpdateInfoType) => {
+    return request.post('/user/update/info',params)
 }
 
