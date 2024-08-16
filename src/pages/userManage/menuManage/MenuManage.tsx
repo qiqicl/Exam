@@ -31,7 +31,7 @@ const MenuManage: React.FC = () => {
     const [form] = Form.useForm()
     const [data, setData] = useState<systemMenuListType[]>()
     const [open, setOpen] = useState(false);
-    const [rank, setRank] = useState<{label:string,value:string}[]>()
+    const [rank, setRank] = useState<{ label: string, value: string }[]>()
     const [formEdit] = Form.useForm();
     const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
                                                                                     editing,
@@ -72,7 +72,7 @@ const MenuManage: React.FC = () => {
         formEdit.setFieldsValue({...record});
         setEditingKey(record.key);
     };
-    const confirm = async (id:string) => {
+    const confirm = async (id: string) => {
         const res = await systemDelMenuApi(id)
         if (res.data.code === 200) {
             message.success(res.data.msg)
@@ -87,6 +87,7 @@ const MenuManage: React.FC = () => {
             dataIndex: 'name',
             key: 'name',
             editable: true,
+            width: "10%"
         },
         {
             title: '菜单路径',
@@ -212,7 +213,7 @@ const MenuManage: React.FC = () => {
         };
     });
     const resList = (res: systemMenuListType[]) => {
-        const newRank:{label:string,value:string}[] = [{
+        const newRank: { label: string, value: string }[] = [{
             label: '创建新的一级菜单',
             value: "0"
         }]
@@ -259,7 +260,7 @@ const MenuManage: React.FC = () => {
     const onFinish = async () => {
         // 通知父组件要搜索的内容
         const value = await form.validateFields()
-        if(value.pid==="0"){
+        if (value.pid === "0") {
             value.pid = ""
         }
         console.log(value)

@@ -198,7 +198,7 @@ export type userOptionsType = {
     lastOnlineTime: string | '',
     avator?: JSX.Element | string,
     key: number,
-    action: JSX.Element
+    action: JSX.Element,
 }
 //用户创建
 export type userOptionsCreate = {
@@ -223,7 +223,9 @@ export type systemPoleList = {
     __v: number,
     createTime: string | '',
     key: number,
-    action: JSX.Element
+    action: JSX.Element,
+    width?:string,
+    align?:string,
 }
 //创建角色
 export type systemCreatePole = {
@@ -241,7 +243,8 @@ export type systemMenuListType = {
     isBtn?: boolean | string,
     createTime?: string,
     action?: JSX.Element,
-    children: systemMenuListChildren[]
+    children: systemMenuListChildren[],
+    editable?:boolean
 }
 export type systemMenuListChildren = {
     key: string,
@@ -253,6 +256,9 @@ export type systemMenuListChildren = {
     isBtn?: boolean | string,
     createTime?: string,
     action?: JSX.Element,
+    width?:string,
+    align?:string,
+    editable?:boolean
 }
 //角色权限更新
 export type systemRoleType = {
