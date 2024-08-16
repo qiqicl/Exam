@@ -23,8 +23,8 @@ import {
   systemUpdateInfoType,
   QuestionTypeResponse,
   QuestionUpdateParams,
-    examListResponse,
-    createTestType
+  examListResponse,
+  createTestType
 } from '../types/api'
 import {
   classListResponse,
@@ -242,6 +242,12 @@ export const userInfoApi = () => {
   return request.get('/user/info')
 }
 
+// 考试记录
+// https://zyxcl.xyz/exam_api/examination/list
+export const examRecordApi = () => {
+  return request.get<examListResponse>('/examination/list')
+}
+
 
 //更新头像
 export const systemAvatarApi = (params:FormData) => {
@@ -252,11 +258,6 @@ export const systemUpdateInfoApi = (params:systemUpdateInfoType) => {
   return request.post('/user/update/info',params)
 }
 
-// 考试记录
-// https://zyxcl.xyz/exam_api/examination/list
-export const examRecordApi = () => {
-    return request.get<examListResponse>('/examination/list')
-}
 
 // 创建考试试卷 https://zyxcl.xyz/exam_api/examination/create?1723711365616
 export const createTestApi = (time:number, createData:createTestType) => {
