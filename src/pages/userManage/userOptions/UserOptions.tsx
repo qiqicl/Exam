@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import style from './userOptions.module.scss'
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space, Popconfirm} from 'antd';
+import {Button, Table, Switch, Modal, Form, Input, Radio, message, Select, Space, Popconfirm, TableProps} from 'antd';
 import {userOptionsType, userOptionsCreate} from '../../../types/api/index'
 import type {SelectProps, PopconfirmProps} from 'antd';
 import {
@@ -146,7 +146,7 @@ const UserOptions: React.FC = () => {
         message.success("分配成功")
         setVisibleRole(false)
     }
-    const columns = [
+    const columns:TableProps<userOptionsType>["columns"] = [
         {
             title: '头像',
             dataIndex: 'avator',

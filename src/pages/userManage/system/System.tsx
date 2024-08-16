@@ -11,7 +11,7 @@ import {
     message,
     Tree,
     Popconfirm,
-    Space
+    Space, TableProps
 } from 'antd';
 import type {TreeProps, TreeDataNode,PopconfirmProps} from 'antd';
 import {DataNode, Node} from 'antd/es/tree'
@@ -53,28 +53,33 @@ const System: React.FC = () => {
     const showDefaultDrawer = () => {
         setOpen(true);
     };
-    const columns = [
+    const columns:TableProps<systemPoleList>['columns'] = [
         {
+            align:'center',
             title: '角色',
             dataIndex: 'name',
             key: 'name',
         },
         {
+            align:'center',
             title: '角色关键字',
             dataIndex: 'value',
             key: 'value',
         },
         {
+            align:'center',
             title: '创建人',
             dataIndex: 'creator',
             key: 'creator',
         },
         {
+            align:'center',
             title: '创建时间',
             dataIndex: 'createTime',
             key: 'createTime',
         },
         {
+            align:'center',
             title: '操作',
             dataIndex: 'action',
             key: 'action',
