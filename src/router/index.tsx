@@ -1,7 +1,7 @@
 import {Navigate} from 'react-router-dom'
 import Login from '../pages/login/Login'
 import Auth from '../auth/Auth'
-import Layout from '../layout'
+import Layout from '../layout/Index'
 import Home from '../pages/home/Home'
 import CreatePaper from '../pages/paper/create-paper/Create-paper'
 import PaperBank from '../pages/paper/paper-bank/Paper-bank'
@@ -20,6 +20,7 @@ import Exam from "../pages/exam/Exam";
 import UserManage from "../pages/userManage/UserManage";
 import CreateItem from "../pages/quesion/create-item/Create-item";
 import ItemBank from "../pages/quesion/item-bank/Item-bank"
+
 const routes = [
     {
         path: '/login',
@@ -40,10 +41,10 @@ const routes = [
         children: [
             {
                 path: '/paper',
-                element: <Navigate to="/paper/paper-bank" />
+                element: <Navigate to="/paper/paper-bank"/>
             },
             {
-                path:'/paper/create-paper',
+                path: '/paper/create-paper',
                 element:
                     <Auth>
                         <Layout>
@@ -52,7 +53,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/paper/paper-bank',
+                path: '/paper/paper-bank',
                 element:
                     <Auth>
                         <Layout>
@@ -68,10 +69,10 @@ const routes = [
         children: [
             {
                 path: '/question',
-                element: <Navigate to="/question/item-bank" />
+                element: <Navigate to="/question/item-bank"/>
             },
             {
-                path:'/question/item-bank',
+                path: '/question/item-bank',
                 element:
                     <Auth>
                         <Layout>
@@ -80,7 +81,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/question/create-item',
+                path: '/question/create-item',
                 element:
                     <Auth>
                         <Layout>
@@ -96,10 +97,10 @@ const routes = [
         children: [
             {
                 path: '/exam',
-                element: <Navigate to="/exam/record" />
+                element: <Navigate to="/exam/record"/>
             },
             {
-                path:'/exam/record',
+                path: '/exam/record',
                 element:
                     <Auth>
                         <Layout>
@@ -108,7 +109,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/exam/create',
+                path: '/exam/create',
                 element:
                     <Auth>
                         <Layout>
@@ -117,7 +118,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/exam/invigilate',
+                path: '/exam/invigilate',
                 element:
                     <Auth>
                         <Layout>
@@ -133,10 +134,10 @@ const routes = [
         children: [
             {
                 path: '/manage-group',
-                element: <Navigate to="/manage-group/group-list" />
+                element: <Navigate to="/manage-group/group-list"/>
             },
             {
-                path:'/manage-group/group-list',
+                path: '/manage-group/group-list',
                 element:
                     <Auth>
                         <Layout>
@@ -145,7 +146,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/manage-group/group-students',
+                path: '/manage-group/group-students',
                 element:
                     <Auth>
                         <Layout>
@@ -161,10 +162,10 @@ const routes = [
         children: [
             {
                 path: '/userManage',
-                element: <Navigate to="/userManage/userOptions" />
+                element: <Navigate to="/userManage/userOptions"/>
             },
             {
-                path:'/userManage/userOptions',
+                path: '/userManage/userOptions',
                 element:
                     <Auth>
                         <Layout>
@@ -173,7 +174,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/userManage/system',
+                path: '/userManage/system',
                 element:
                     <Auth>
                         <Layout>
@@ -182,7 +183,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/userManage/menuManage',
+                path: '/userManage/menuManage',
                 element:
                     <Auth>
                         <Layout>
@@ -191,7 +192,7 @@ const routes = [
                     </Auth>
             },
             {
-                path:'/userManage/personal',
+                path: '/userManage/personal',
                 element:
                     <Auth>
                         <Layout>
@@ -204,6 +205,14 @@ const routes = [
     {
         path: '/',
         element: <Navigate to="/home"/>
+    },
+    {
+        path: '*',
+        element: <Auth>
+                    <Layout>
+                        <div>404</div>
+                    </Layout>
+                </Auth>
     }
 ]
 

@@ -1,19 +1,21 @@
 import React, {useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import style from './create.module.scss'
 import type { ProFormInstance } from '@ant-design/pro-components';
-import { userListApi, classifyApi,examBanApi,examListApi } from '../../../services/index'
+import { userListApi, classifyListApi, examListApi, classListApi1, createTestApi,examRecordApi } from '../../../services/index'
 import {
   ProCard,
-  ProFormDateRangePicker,
   ProFormSelect,
   ProFormText,
   StepsForm,
+  ProFormDateTimeRangePicker
 } from '@ant-design/pro-components';
-import { matchResponse, match2Response, examListResponse } from '../../../types/api/index'
+import { matchResponse, match2Response, ExamListResponse, formDataType } from '../../../types/api/index'
 import { message } from 'antd';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
-import { DataType } from '../../../types/api'
+import { DataType, listType } from '../../../types/api'
+import {classifyType} from '../../../types/api/classAndStudent'
 
 const columns: TableColumnsType<DataType> = [
   {
@@ -35,26 +37,30 @@ const columns: TableColumnsType<DataType> = [
   }
 ];
 
-
-const rowSelection = {
-  onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  },
-  getCheckboxProps: (record: DataType) => ({
-    disabled: record.name === 'Disabled User',
-    name: record.name,
-  }),
-};
-
-
 const Create: React.FC = () => {
-
-  const [classBan, setClassBan] = useState([]);
-  const [classify, setClassify] = useState([]);
-  const [examiner, setExaminer] = useState([]);
-  const [examList, setExamList] = useState([]);
+  const [classBan, setClassBan] = useState<string[]>([]);
+  const [classify, setClassify] = useState<string[]>([]);
+  const [examiner, setExaminer] = useState<string[]>([]);
+  const [keys, setKeys] = useState<string[]>([])
+  const [date, setDate] = useState<string[]>([])
+  const navigate = useNavigate()
+  const [examList, setExamList] = useState<ExamListResponse["data"]["list"]>([]);
   //步骤二中的筛选出来的数组
-  const [list,setList] = useState([])
+  const [list,setList] = useState<match2Response[]>([])
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      console.log(selectedRowKeys)
+    // 将 selectedRowKeys 中的每个值转换为字符串
+    const stringKeys = selectedRowKeys.map(val => String(val));
+    // 更新状态
+    setKeys(stringKeys);
+    },
+    getCheckboxProps: (record: DataType) => ({
+      disabled: record.name === 'Disabled User',
+      name: record.name,
+    }),
+  };
 
   const waitTime = (time: number = 100) => {
     return new Promise((resolve) => {
@@ -62,52 +68,46 @@ const Create: React.FC = () => {
         resolve(true);
       }, time)
     })
-  };
-  const [selectionType, setSelectionType] = useState<'radio'>('radio');
+  }
+  const [selectionType] = useState<'radio'>('radio');
   // 处理表单
   const formRef = useRef<ProFormInstance>()
-  const [formData, setFormData] = useState({})
+  const [formData, setFormData] = useState<formDataType>({} as formDataType)
 
-  const [filterItem,setFilterItem] = useState('')
 
-  const handelForm = async(values:any) => {
-    const { name, dateTime, 'Info1[type]': subjectType,'Info2[type]': examinerType,'Info3[type]': classType, ...rest }= values
+  const handelForm = async(values:formDataType) => {
+    const { name, startTime,endTime, classify,examiner,group, ...rest }= values
     // 保存表单数据到状态
     setFormData({
       name,
-      dateTime,
-      subjectType,
-      examinerType,
-      classType,
+      startTime,
+      endTime,
+      classify,
+      examiner,
+      group,
       ...rest,
     })
     await waitTime(2000)
-    setFilterItem(values.Info1)
-    const filter = Array.of(values.Info1)
-    console.log(examList,filterItem1);
+    const filter = Array.of(values.classify)
+    console.log(filter)
     const match:matchResponse[] = examList.filter(examItem => {
-      return filter.some(filterItemType => examItem.classify === filterItemType.type)
+      return filter.some(filterItemType => examItem.classify === filterItemType)
     })
-    //根据科目分类筛选得到的数组
     console.log(match)
+    //根据科目分类筛选得到的数组
     const match2:match2Response[] = match.map(item => {
       return{
         key: item._id,
         name: item.name || '默认名称', // 如果 name 可能不存在，提供默认值
         class: item.classify || '默认班级', 
         creator: item.creator || '默认创建者',
-        createTime: item.createTime || '默认创建时间'
+        createTime: new Date(item.createTime).toLocaleString() || '默认创建时间'
       }
-  })
-  // setMath1(match2)
-  console.log(match2)
-  setList(match2)
+    })
+    setList(match2)
+    // 转换
     return true
   }
-  // 将filterItem转成数组
-  const filterItem1 = Array.of(filterItem)
-  console.log(filterItem1)
-
 
 
   useEffect(() => {
@@ -126,13 +126,14 @@ const Create: React.FC = () => {
     // 调用 科目分类 接口并处理返回的数据 
     const getClassify = async () => {
       try {
-        const res = await classifyApi()
+        const res = await classifyListApi()
         const classify1 = res.data.data.list.map(item => item.name)
         // 数组数据去重
         let list = new Set(classify1)
         // 伪数组变成新数组
-        list = [...list]
-        setClassify(list)
+        // list = [...list]
+        let list1= Array.from(list)
+        setClassify(list1)
       } catch (error) {
         console.log(error)
       }
@@ -141,13 +142,18 @@ const Create: React.FC = () => {
     // 调用 考试班级 接口并处理返回的数据 
     const getClassBanify = async () => {
       try {
-        const res = await examBanApi()
-        const classBan1 = res.data.data.list.map(item => item.name)
+        const res = await classListApi1()
+       
+        const classBan2:classifyType[] = res.data.data.list
+        const classBan1 =  classBan2.map(item => item.name)
+
         // 数组数据去重
         let list = new Set(classBan1)
         // 伪数组变成新数组
-        list = [...list]
-        setClassBan(list)
+        // list = [...list]
+        let list1= Array.from(list)
+        setClassBan(list1)
+        // console.log(classBan)
       } catch (error) {
         console.log(error)
       }
@@ -157,14 +163,51 @@ const Create: React.FC = () => {
     const getTest = async () => {
       try {
         const res = await examListApi()
-        const examList1 = res.data.data.list
+        const examList1:ExamListResponse["data"]["list"] = res.data.data.list
         setExamList(examList1)
+        // console.log(examList)
       } catch (error) {
         console.log(error)
       }
     }
     getTest()
+    
+
+    // const getDate = async (time:number) => {
+    //   try {
+    //     const res = await createTestApi(time, formData)
+    //     console.log(res)
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // }
+    // console.log(date)
+    // 根据考试科目不同来渲染不同的开始时间和结束时间
+    
   },[])
+  useEffect(() => {
+    // 将key的值放进去
+    console.log(keys.join('')); // 这将打印最新的 keys 值
+    const addKeys = () => {
+      // 使用展开运算符 ... 来复制 formData 并更新 keys 属性
+      // 确保 formData 和 dateTimeRange 存在
+    if (formData && formData.dateTimeRange && formData.dateTimeRange[0] && formData.dateTimeRange[1]) {
+      setFormData({
+        ...formData,
+        examId: keys.join(''),
+        startTime:(Date.parse(formData?.dateTimeRange[0])).toString(),
+        endTime:(Date.parse(formData?.dateTimeRange[1])).toString()
+      })
+    }
+  }
+    addKeys()
+  }, [keys,formData?.dateTimeRange]);
+
+  // 转开始时间和结束时间
+  const startTime = new Date(formData.startTime)
+  console.log(formData.startTime)
+  console.log(startTime)
+  console.log(formData.startTime)
 
 
   return (
@@ -186,7 +229,7 @@ const Create: React.FC = () => {
           },
         }}
       >
-    
+
         {/* 第一步 */}
 
         <StepsForm.StepForm<{
@@ -203,22 +246,26 @@ const Create: React.FC = () => {
             placeholder="请输入名称"
             rules={[{ required: true }]}
           />
-          <ProFormDateRangePicker name="dateTime" label="考试时间" />
+          <ProFormDateTimeRangePicker
+            name="dateTimeRange"
+            label="考试时间"
+            rules={[{ required: true }]}
+          />
           <ProFormSelect
             label="科目分类"
-            name={['Info1', 'type']}
+            name='classify'
             rules={[{ required: true }]}
             options={classify.map((item) => ({ value: item, label: item}))}
           />
           <ProFormSelect
             label="监考人"
-            name={['Info2', 'type']}
+            name='examiner'
             rules={[{ required: true }]}
             options={examiner.map((item) => ({ value: item, label: item}))}
           />
           <ProFormSelect
             label="考试班级"
-            name={['Info3', 'type']}
+            name='group'
             rules={[{ required: true }]}
             options={classBan.map((item) => ({ value: item, label: item}))}
           />
@@ -251,23 +298,23 @@ const Create: React.FC = () => {
         <StepsForm.StepForm
           name="time"
           title="发布考试"
+          onFinish={async () => {
+            const res = await createTestApi(Date.now(), formData)
+            console.log(res)
+            navigate('/exam/record')
+            return true;
+          }}
         >
           <h2>配置信息</h2>
           <p>考试名称：{formData?.name}</p>
-          <p>科目分类：{formData?.Info1?.type}</p>
-          <p>监考人员：{formData?.Info2?.type}</p>
-          <p>班级：{formData?.Info3?.type}</p>
-          {/* <p className={style.time}>考试时间：{formData?.dateTime}</p> */}
-          <div className={style.time}>
-          {formData?.dateTime && formData.dateTime.map((item, index) => (
-            // 每个日期项显示在一个新的段落中
-            <p key={index}>考试时间 {index + 1}: {item}</p>
-          ))}
-          </div>
+          <p>科目分类：{formData?.classify}</p>
+          <p>监考人员：{formData?.examiner}</p>
+          <p>班级：{formData?.group}</p>
+          <p>考试时间: &nbsp;&nbsp;开始时间:{formData.startTime}</p>
+          <p className={style.end}>结束时间:{formData.endTime}</p>
         </StepsForm.StepForm>
       </StepsForm>
     </ProCard>
-
       </div>
     </div>
   );

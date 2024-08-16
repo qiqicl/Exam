@@ -11,6 +11,7 @@ import {
     DiffOutlined,
 } from "@ant-design/icons";
 import {useAppSelector} from "../../../hooks/store.ts";
+// import type {examListSearchParams} from "../../../types/api";
 
 interface Props {
     children: JSX.Element;
@@ -34,6 +35,8 @@ type MenuItem = Required<MenuProps>["items"][number];
 const Aside: React.FC<Props> = (props) => {
     const pathName = useRef(location.pathname.split('/').filter(i => i))
     const userInfo = useAppSelector(state => state.user.userInfo)
+    const [items,setItems] = useState<MenuItem[]>()
+    const [forceUpdate,setForceUpdate] = useState(0)
     const [beadCrumb, setBeadCrumb] = useState<BreadCrumbItem>([
         {
             title: <Link to="/home">Home</Link>,
@@ -42,97 +45,6 @@ const Aside: React.FC<Props> = (props) => {
     const {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
-    const items: MenuItem[] = [
-        {
-            key: "1",
-            label: "试卷管理",
-            icon: <CopyOutlined/>,
-            children: [
-                {
-                    key: "/paper/paper-bank",
-                    label: <Link to="/paper/paper-bank">试卷库</Link>,
-                },
-                {
-                    key: "/paper/create-paper",
-                    label: <Link to="/paper/create-paper">创建试卷</Link>,
-                },
-            ],
-        },
-        {
-            key: "2",
-            label: "试题管理",
-            icon: <DiffOutlined/>,
-            children: [
-                {
-                    key: "/question/item-bank",
-                    label: <Link to="/question/item-bank">试题库</Link>,
-                },
-                {
-                    key: "/question/create-item",
-                    label: <Link to="/question/create-item">创建试卷</Link>,
-                },
-            ],
-        },
-        {
-            key: "3",
-            icon: <FormOutlined/>,
-            label: "考试管理",
-            children: [
-                {
-                    key: "/exam/record",
-                    label: <Link to="/exam/record">考试记录</Link>,
-                },
-                {
-                    key: "/exam/create",
-                    label: <Link to="/exam/create">创建考试</Link>,
-                },
-                {
-                    key: "/exam/invigilate",
-                    label: <Link to="/exam/invigilate">在线监考</Link>,
-                },
-            ],
-        },
-        {
-            key: "4",
-            icon: <TeamOutlined/>,
-            label: "班级管理",
-            children: [
-                {
-                    key: "/manage-group/group-list",
-                    label: <Link to="/manage-group/group-list">班级列表</Link>,
-                },
-                {
-                    key: "/manage-group/group-students",
-                    label: <Link to="/manage-group/group-students">学生列表</Link>,
-                },
-            ],
-        },
-        {
-            key: "5",
-            icon: <BarsOutlined/>,
-            label: "系统管理",
-            children: [
-                {
-                    key: "/userManage/userOptions",
-                    label: <Link to="/userManage/userOptions">用户管理</Link>,
-                },
-                {
-                    key: "/userManage/system",
-                    label: <Link to="/userManage/system">角色管理</Link>,
-                },
-                {
-                    key: "/userManage/menuManage",
-                    label: <Link to="/userManage/menuManage">权限管理</Link>,
-                },
-                {
-                    key: "/userManage/personal",
-                    label: <Link to="/userManage/personal">个人信息</Link>,
-                },
-            ],
-        },
-    ];
-
-
     const {Content, Sider} = Layout
 
     enum breadcrumbNameMap {
@@ -162,7 +74,7 @@ const Aside: React.FC<Props> = (props) => {
 
     const defaultOpenKeys = useMemo(() => {
         const keys: string[] = [];
-        items.forEach((val) => {
+        items?.forEach((val) => {
             (val as Menu).children.forEach((v) => {
                 if (v.key === location.pathname) {
                     keys.push(val?.key as string);
@@ -193,31 +105,35 @@ const Aside: React.FC<Props> = (props) => {
     }, [location.pathname])
     useEffect(() => {
         console.log(userInfo)
-
-        userInfo.permission?.map((item, index) => {
-            userInfo.permission.map((it)=>{
-                const data = []
-                if(item.pid===""){
-                    data.push({
-                        key:it.path,
-                        label:<Link to={it.path as string}>{it.name}</Link>,
-                    })
-                }
-            })
-            return {
-                key: index + 1,
-                label: item.name,
-                icon: item.name === "试卷管理" ? <CopyOutlined/> :
+        const data = userInfo.permission?.map((item, index) => {
+            const data:{key:string,label:JSX.Element}[] = []
+            if(item.pid === ""){
+                userInfo.permission.map((it)=>{
+                    if(item.pid==="" && it.pid === item._id){
+                        data.push({
+                            key:it.path as string,
+                            label:<Link to={it.path as string}>{it.name}</Link>,
+                        })
+                    }
+                })
+                return {
+                    key: index + 1,
+                    label: item.name,
+                    icon: item.name === "试卷管理" ? <CopyOutlined/> :
                         item.name === "试题管理" ? <DiffOutlined/> :
-                        item.name === "考试管理" ? <FormOutlined/> :
-                        item.name === "班级管理" ? <TeamOutlined/> : <BarsOutlined/>
-                // children:
+                            item.name === "考试管理" ? <FormOutlined/> :
+                                item.name === "班级管理" ? <TeamOutlined/> : <BarsOutlined/>,
+                    children:data
+                }
             }
         })
-    })
+        console.log(data?.filter(item=>!!item))
+        setItems(data?.filter(item=>!!item))
+        setForceUpdate(forceUpdate + 1)
+    },[userInfo])
 
     return (
-        <div style={{height: "100%"}}>
+        <div style={{height: "100%"}} key={forceUpdate}>
             <Content
                 style={{
                     padding: "0 2px",
@@ -253,7 +169,7 @@ const Aside: React.FC<Props> = (props) => {
                         />
                     </Sider>
                     <Content
-                        style={{padding: '0', height: "100%", width: "100%", display: "flex", flexDirection: "column"}}>
+                        style={{padding: '0', height: "100%", display: "flex", flexDirection: "column"}}>
                         <Breadcrumb
                             style={{margin: "16px 10px"}}
                             items={beadCrumb}
