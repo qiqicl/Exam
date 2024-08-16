@@ -1,26 +1,24 @@
 import React from "react"
 import { useEffect,useState } from "react"
 import { Button, Form, Input, Select, Space, theme } from "antd"
-import { examListSearchApi,userListApi,classifyListApi ,questionTypeApi} from "../../../../../services/index"
+import { classifyListApi ,questionTypeApi,questionListFilterApi } from "../../../../../services/index"
 import type {
   examListSearchParams,
-  UserListResponse,
   ClassifyListResponse,
-  ExamListItem,
-  QuestionTypeResponse
+  QuestionTypeResponse,
+  QueationDataType
 } from "../../../../../types/api"
 
 const { Option } = Select
 
 interface Props {
-  search:(searchlist:ExamListItem[]) => void
+  search:(searchlist:QueationDataType[]) => void
   re:() => void
 }
 
 const Search: React.FC<Props>  = (props) => {
   const { token } = theme.useToken()
   const [form] = Form.useForm()
-  const [user, setUser] = useState<UserListResponse["data"]>()
   const [classify,setClassify] = useState<ClassifyListResponse["data"]>()
 
   const [questionType,setQuestionType] = useState<QuestionTypeResponse["data"]["list"]>([] as QuestionTypeResponse["data"]["list"])
@@ -46,17 +44,13 @@ const Search: React.FC<Props>  = (props) => {
       arr.push(`${key}=${values[key as keyof examListSearchParams]}`)
     }
     const str = arr.join('&')
-    const res = await examListSearchApi(str)
+    const res = await questionListFilterApi(str)
     console.log(res)
     props.search(res.data.data.list.map((v) => {
-      return {...v,createTime:new Date(v.createTime).toLocaleString('zh-cn'),isUpdateNow:false}
+      return {...v,isUpdateNow:false}
     }))
   }
 
-  const userList = async () => {
-    const res = await userListApi()
-    setUser(res.data.data)
-  }
 
   const classifyList = async () => {
     const res = await classifyListApi()
@@ -64,7 +58,6 @@ const Search: React.FC<Props>  = (props) => {
   }
 
   useEffect(() => {
-    userList()
     classifyList()
     getQuestionType()
   },[])
@@ -79,7 +72,7 @@ const Search: React.FC<Props>  = (props) => {
         layout={"inline"}
       >
         <Form.Item
-          name={"name"}
+          name={"question"}
           label={`题目名称`}
           rules={[
             {
@@ -108,7 +101,7 @@ const Search: React.FC<Props>  = (props) => {
         </Form.Item>
         <Form.Item
           name={`classify`}
-          label={`查询科目`}
+          label={`科目`}
           rules={[
             {
               required: false,

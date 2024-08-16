@@ -81,8 +81,11 @@ export type QuestionItem  =  {
   desc: string,
   __v: number,
   checked?:boolean,
-  key:string
+  key?:string
 }
+
+export type QueationDataType = QuestionItem & {isUpdateNow :boolean,key?:string}
+
 export type QuestionListResponse = {
   code: number,
   msg: string,
@@ -133,6 +136,8 @@ export type ExamUpdateRespanse = {
     code: number;
     msg: string;
 }
+
+export type QuestionUpdateParams = Record<"id" | "question", string>
 
 // 用户列表
 export type UserListResponse = {

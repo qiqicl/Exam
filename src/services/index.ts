@@ -20,7 +20,8 @@ import {
     systemCreatePole,
     systemRoleType,
     BaseResponse,
-    QuestionTypeResponse
+    QuestionTypeResponse,
+    QuestionUpdateParams
 } from '../types/api'
 import {
     classListResponse,
@@ -82,10 +83,26 @@ export const questionTypeApi = () => {
 }
 
 //试题筛选
+export const questionListFilterApi = (params:string) => {
+    return request.get<QuestionListResponse>(`/question/list?${params}`)
+}
+
+//试题科目筛选
 export const questionListSearchApi = (params:string) => {
     return request.get<QuestionListResponse>(`/question/list?classify=${params}`)
 }
-// 试题新建
+
+//删除试题
+export const questionRemoveApi = (params:ExamDetailParams) => {
+    return request.post<ExamRemoveRespanse>(`/question/remove`,params)
+}
+
+//编辑试题
+export const questionUpdateApi = (params:QuestionUpdateParams) => {
+    return request.post<ExamUpdateRespanse>(`/question/update`,params)
+}
+
+// 试卷新建
 export const createExamApi = (params:CreateExamParams) => {
     return request.post<CreateExamResponse>(`/exam/create?${Date.now()}`,params)
 }

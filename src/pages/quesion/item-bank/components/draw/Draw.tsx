@@ -1,6 +1,6 @@
 import React from "react"
 import {  Drawer,Button } from 'antd'
-import { ExamDetailRespanse,Question} from "../../../../../types/api"
+import { QuestionItem } from "../../../../../types/api"
 import style from "./draw.module.scss"
 import { useRef } from 'react'
 import { jsPDF } from "jspdf"
@@ -10,51 +10,30 @@ import domtoimage from 'dom-to-image'
 interface Props {
   open:boolean
   onClose:() => void
-  detail:ExamDetailRespanse["data"]
+  detail:QuestionItem
 }
+
+enum QuestionType  {
+  danxuan = '1',
+  duoxuan = '2',
+  panduan = "3",
+  jianda = "4"
+}
+const QuestionTypeText = {
+  [QuestionType.danxuan] : '单选题',
+  [QuestionType.duoxuan] : '多选题',
+  [QuestionType.panduan] : '判断题',
+  [QuestionType.jianda] : '简答题',
+}
+
+
 
 const Draw: React.FC<Props>  = (props) => {
   const paperRef = useRef<HTMLDivElement>({} as HTMLDivElement)
 
-  const detailRender = () => {
-    const render:{ type: "1"|"2"|"3"|"4", title:string,question:Question[] }[] = []
-    props.detail.questions?.forEach((v) => {
-      if( v?.type === "1" ) {
-        const thisType = render.find((i) => i.type === "1")
-        if(!thisType){
-          render.push({ type: "1",title:"单选题",question:[v] })
-        }else{
-          thisType.question.push(v)
-        }
-      }else if(v?.type === "2"){
-        const thisType = render.find((i) => i.type === "2")
-        if(!thisType){
-          render.push({ type: "2",title:"多选题",question:[v] })
-        }else{
-          thisType.question.push(v)
-        }
-      }else if(v?.type === "3"){
-        const thisType = render.find((i) => i.type === "3")
-        if(!thisType){
-          render.push({ type: "3",title:"判断题",question:[v] })
-        }else{
-          thisType.question.push(v)
-        }
-      }else if(v?.type === "4"){
-        const thisType = render.find((i) => i.type === "4")
-        if(!thisType){
-          render.push({ type: "4",title:"填空题",question:[v] })
-        }else{
-          thisType.question.push(v)
-        }
-      }
-    })
-    return render
-  }
-
   const exportPDF = async (title: string, ref: HTMLDivElement) => {
     // 根据dpi放大，防止图片模糊
-    const scale = window.devicePixelRatio > 1 ? window.devicePixelRatio : 2;
+    const scale = 4 ;
     // 下载尺寸 a4 纸 比例
     const pdf = new jsPDF('p', 'pt', 'a4');
     let width = ref.offsetWidth;
@@ -120,29 +99,23 @@ const Draw: React.FC<Props>  = (props) => {
   return (
     <div className="draw">
       <>
-        <Drawer title="试卷预览"
+        <Drawer title="试题预览"
         onClose={() => {props.onClose()}}
         open={props.open} width={600}
         extra={
-            <Button type="primary" onClick={() => exportPDF(props.detail.name,paperRef.current)}>导出</Button>
+            <Button type="primary" onClick={() => exportPDF("题目",paperRef.current)}>导出</Button>
         }
         >
           <div ref={paperRef} style={{padding:"20px"}}>
-            <h3>{props.detail.name}</h3>
-            <div className={style.classify}>科目 { props.detail.classify }</div>
-            {detailRender().map((item,index) => {
-              return <div key={index} className={style.question}>
-                      <h4 className={style.type}>{item.title}</h4>
-                      {item.question.map((t,index) =>{
-                        return <div key={index}>
-                          <div className={style.question_item}>{index+1}: {t.question}</div>
-                          <div className={style.answer}>{t.options.map((a,index) => {
-                            return <span key={index}>{String.fromCharCode(64 + index + 1)}: {a}</span>
-                          })}</div>
-                        </div>
-                      })}
-                    </div>
+            <div className={style.classify}>科目: { props.detail.classify}</div>
+            <h4 className={style.type}>题型： {QuestionTypeText[props.detail.type]}</h4>
+            <div className={style.question_item}>{ props.detail.question }</div>
+            <div className={style.answer}>
+            {props.detail.options?.map((item,index) => {
+              return <span key={index}>{String.fromCharCode(64 + index + 1)}: {item}</span>
             })}
+            </div>
+            <div>答案： {props.detail.answer}</div>
           </div>
         </Drawer>
       </>
