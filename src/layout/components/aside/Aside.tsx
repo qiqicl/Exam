@@ -10,6 +10,7 @@ import {
   BarsOutlined,
   DiffOutlined,
 } from "@ant-design/icons";
+import {useAppSelector} from "../../../hooks/store.ts";
 
 interface Props {
   children: JSX.Element;
@@ -31,6 +32,7 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 const Aside: React.FC<Props> = (props) => {
   const pathName = useRef(location.pathname.split('/').filter(i => i))
+  const userInfo = useAppSelector(state => state.user.userInfo)
   const [beadCrumb,setBeadCrumb] = useState< BreadCrumbItem>([
     {
       title: <Link to="/home">Home</Link>,
@@ -131,14 +133,13 @@ const Aside: React.FC<Props> = (props) => {
 
 
   const { Content, Sider } = Layout
-
   enum breadcrumbNameMap {
     'paper'= '试卷管理',
     'paper-bank'= '试卷库',
     'create-paper'= '创建试卷',
     "question"="试题管理",
     "item-bank" = "试题库",
-    "create-item" = "创建试题",
+    "create-item" = "添加试题",
     "exam" = "考试管理",
     "record" = "考试记录",
     "create" = "创建考试",
@@ -151,7 +152,8 @@ const Aside: React.FC<Props> = (props) => {
     "system" = "角色管理",
     "menuManage" = "权限管理",
     "personal" = "个人信息",
-
+    "group-class" = "创建班级",
+    "create-subject" = "创建科目",
   }
 
   type breadcrumb_item = keyof typeof breadcrumbNameMap
@@ -184,7 +186,16 @@ const Aside: React.FC<Props> = (props) => {
     if(location.pathname !== "/home") {setBeadCrumb((beadCrumb) => beadCrumb.concat(breadcrumb_item_add))}
     // console.log(beadCrumb)
   }, [location.pathname])
+  useEffect(()=>{
+    console.log(userInfo)
+    userInfo.permission.map((item,index)=>{
+        return {
+          key:index + 1,
+          label:item.name,
 
+        }
+    })
+  })
 
   return (
     <div style={{ height: "100%" }}>
