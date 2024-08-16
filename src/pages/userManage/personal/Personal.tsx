@@ -4,15 +4,17 @@ import {message, Upload, Descriptions, Button, Modal, Form, Input, InputNumber, 
 import ImgCrop from 'antd-img-crop';
 import type {GetProp, UploadProps, UploadFile,DescriptionsProps} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
-import {systemAvatarApi, systemUpdateInfoApi, userInfoApi} from "../../../services";
-import {systemUpdateInfoType} from "../../../types/api";
+import {systemAvatarApi, systemUpdateInfoApi} from "../../../services";
+import {useAppDispatch, useAppSelector} from "../../../hooks/store.ts";
+import {getUserInfoStore} from "../../../store/models/user.ts";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const Personal: React.FC = () => {
     const [avatar,setAvatar] = useState<string>()
-    const [userInfo,setUserInfo] = useState<systemUpdateInfoType>()
+    const dispatch = useAppDispatch()
     const [form] = Form.useForm()
     const [visible, setVisible] = useState(false)
+    const userInfo = useAppSelector(state => state.user.userInfo)
     const onPreview = async (file: UploadFile) => {
         console.log(file)
         let src = file.url as string;
@@ -68,14 +70,11 @@ const Personal: React.FC = () => {
         setVisible(false)
     }
     const upDate = () => {
-        userInfoApi().then(res=>{
-            setAvatar(res.data.data.avator)
-            setUserInfo(res.data.data)
-        })
+        setAvatar(userInfo.avator)
     }
     useEffect(() => {
         upDate()
-    }, [])
+    }, [userInfo])
     useEffect(() => {
         if (!visible) {
             form.resetFields()
@@ -104,9 +103,7 @@ const Personal: React.FC = () => {
                                     systemUpdateInfoApi({avator:res.data.data.url}).then((res)=>{
                                         if (res.data.code === 200) {
                                             message.success(res.data.msg)
-                                            userInfoApi().then(res=>{
-                                                setAvatar(res.data.data.avator)
-                                            })
+                                            dispatch(getUserInfoStore())
                                         } else {
                                             message.error(res.data.msg)
                                         }

@@ -1,17 +1,18 @@
 // import React from "react"
 import { useEffect, useRef, useState } from "react";
 import { Layout, Avatar ,Dropdown,message} from "antd"
-import { userInfoApi } from "../../../services/index"
 import { useNavigate } from 'react-router-dom'
 import type { MenuProps } from 'antd'
 import { Link } from "react-router-dom"
 import style from "./Header.module.scss"
+import {useAppSelector} from "../../../hooks/store.ts";
 const { Header } = Layout;
 
 const Index = () => {
   const [avatar,setAvatar] = useState<string>("")
   const [userName,setUserName] = useState<string>("")
   const navigate = useNavigate()
+  const userInfo = useAppSelector(state => state.user.userInfo)
   const col = useRef("#")
 
   const signOut = () => {
@@ -35,14 +36,12 @@ const Index = () => {
     for (let i = 0; i < 6; i++) col.current +=parseInt((Math.random()*9).toString())
     console.log(col)
   }
-  const getUserInfo = async () => {
-    const res = await userInfoApi()
-    console.log(res)
-    setAvatar(res.data.data.avator || "")
-    setUserName(res.data.data.username)
-  }
   useEffect(() => {
-    getUserInfo()
+    console.log(userInfo)
+    setAvatar(userInfo.avator || "")
+    setUserName(userInfo.username as string)
+  }, [userInfo]);
+  useEffect(() => {
     randomColor()
   },[])
   return (
@@ -54,7 +53,7 @@ const Index = () => {
         <Dropdown menu={{ items }} trigger={['click']}>
             <div style={{ display: "flex", alignItems: "center"}}>
               {!avatar ?
-              <Avatar size={"large"}  style={{ backgroundColor:col.current, color:"white", display: "flex", alignItems: "center" }}>{userName.slice(0,1)}</Avatar> :
+              <Avatar size={"large"}  style={{ backgroundColor:col.current, color:"white", display: "flex", alignItems: "center" }}>{userName?.slice(0,1)}</Avatar> :
               <Avatar size={"large"} src={avatar}  />
               }
               <span style={{margin:"0 20px",color:"white"}}>{userName}</span>
