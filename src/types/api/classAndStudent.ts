@@ -1,12 +1,12 @@
 //班级列表
 export type classListResponse = {
-  code: number;
-  data: {
-    list: [];
-    total: number;
-    totalPage?: number;
-  };
-  msg: string;
+    code: number;
+    data: {
+        list: [];
+        total?: number;
+        totalPage?: number;
+    };
+    msg: string;
 }
 export type classListItem = {
   list: {

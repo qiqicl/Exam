@@ -188,7 +188,7 @@ const Aside: React.FC<Props> = (props) => {
   }, [location.pathname])
   useEffect(()=>{
     console.log(userInfo)
-    userInfo.permission.map((item,index)=>{
+    userInfo.permission?.map((item,index)=>{
         return {
           key:index + 1,
           label:item.name,
@@ -233,7 +233,7 @@ const Aside: React.FC<Props> = (props) => {
               selectedKeys={[location.pathname]}
             />
           </Sider>
-          <Content style={{ padding: '0', height: "100%", width: "100%" ,display:"flex",flexDirection:"column"}}>
+          <Content style={{ padding: '0', height: "100%" ,display:"flex",flexDirection:"column"}}>
             <Breadcrumb
               style={{ margin: "16px 10px" }}
               items={beadCrumb}
