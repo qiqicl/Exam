@@ -22,7 +22,8 @@ import {
   BaseResponse,
   systemUpdateInfoType,
   QuestionTypeResponse,
-  QuestionUpdateParams
+  QuestionUpdateParams,
+  examListResponse
 } from '../types/api'
 import {
   classListResponse,
@@ -234,11 +235,11 @@ export const  StudentInfoApi = () => {
 export const userInfoApi = () => {
   return request.get('/user/info')
 }
-// 考试记录
 
+// 考试记录
 // https://zyxcl.xyz/exam_api/examination/list
 export const examRecordApi = () => {
-  return request.get<RecordResponse>('/examination/list')
+  return request.get<examListResponse>('/examination/list')
 }
 
 // 科目分类接口 https://zyxcl.xyz/exam_api/classify/list
