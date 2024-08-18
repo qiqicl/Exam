@@ -11,7 +11,6 @@ const Login: React.FC = () => {
     const [key,setKey] = useState("1")
     const navigate = useNavigate()
     const onChange = (key: string) => {
-        console.log(key);
         setKey(key)
     };
     const loginStudent = async (values:LoginParams) => {
@@ -21,9 +20,8 @@ const Login: React.FC = () => {
             navigate('/home')
         }else{
             message.error(res.data.msg)
+            code()
         }
-
-
     }
     const login = async (values:LoginParams) => {
         const res = await loginApi(values)
@@ -32,6 +30,7 @@ const Login: React.FC = () => {
             navigate('/home')
         }else{
             message.error(res.data.msg)
+            code()
         }
     }
     const onFinish = (values: LoginParams) => {
