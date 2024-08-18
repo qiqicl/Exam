@@ -298,7 +298,7 @@ export interface DataType {
 
 // 调考试记录 最里面的值
 export type listResponse = {
-    id: string,
+    _id: string,
     name: string,
     classify: string,
     creator: string,
@@ -307,8 +307,10 @@ export type listResponse = {
     examiner: string,
     group: Array<string>[],
     startTime: string,
-    endTime: string
-
+    endTime: string,
+    examId: string,
+    __v: number,
+    questionsList:[]
 }
 
 
@@ -417,4 +419,26 @@ export interface listType {
   startTime:string;
   createTime:string;
   endTime:string;
+}
+
+export interface classifyType1 {
+    createTime:number;
+    creator:string;
+    name: string;
+    value: string;
+    __v:number;
+    _id:string;
+}
+export interface chaxun {
+    classify: string;
+    creator:string;
+    current?: number;
+    endTime: string;
+    examiner:string;
+    group: string;
+    name:string;
+    pageSize?:number;
+    showTime:string;
+    startTime:string;
+    status:string;
 }

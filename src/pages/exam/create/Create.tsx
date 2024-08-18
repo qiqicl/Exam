@@ -14,7 +14,7 @@ import { matchResponse, match2Response, ExamListResponse, formDataType } from '.
 import { message } from 'antd';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
-import { DataType, listType } from '../../../types/api'
+import { DataType } from '../../../types/api'
 import {classifyType} from '../../../types/api/classAndStudent'
 
 const columns: TableColumnsType<DataType> = [
@@ -35,12 +35,12 @@ const columns: TableColumnsType<DataType> = [
     title: '试卷创建时间',
     dataIndex: 'createTime',
   }
-];
+]
 
 const Create: React.FC = () => {
-  const [classBan, setClassBan] = useState<string[]>([]);
-  const [classify, setClassify] = useState<string[]>([]);
-  const [examiner, setExaminer] = useState<string[]>([]);
+  const [classBan, setClassBan] = useState<string[]>([])
+  const [classify, setClassify] = useState<string[]>([])
+  const [examiner, setExaminer] = useState<string[]>([])
   const [keys, setKeys] = useState<string[]>([])
   const [date, setDate] = useState<string[]>([])
   const navigate = useNavigate()
@@ -123,7 +123,7 @@ const Create: React.FC = () => {
     }
     getExaminer()
 
-    // 调用 科目分类 接口并处理返回的数据 
+    // 调用 科目分类 接口并处理返回的数据
     const getClassify = async () => {
       try {
         const res = await classifyListApi()
@@ -171,20 +171,8 @@ const Create: React.FC = () => {
       }
     }
     getTest()
-    
-
-    // const getDate = async (time:number) => {
-    //   try {
-    //     const res = await createTestApi(time, formData)
-    //     console.log(res)
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // }
-    // console.log(date)
-    // 根据考试科目不同来渲染不同的开始时间和结束时间
-    
   },[])
+
   useEffect(() => {
     // 将key的值放进去
     console.log(keys.join('')); // 这将打印最新的 keys 值
@@ -204,10 +192,15 @@ const Create: React.FC = () => {
   }, [keys,formData?.dateTimeRange]);
 
   // 转开始时间和结束时间
-  const startTime = new Date(formData.startTime)
+  const startTime = new Date(formData.startTime).toLocaleString()
   console.log(formData.startTime)
-  console.log(startTime)
+  console.log(new Date(formData.startTime).toLocaleString())
   console.log(formData.startTime)
+
+
+  console.log(formData)
+  console.log(formData.startTime)
+  // const 
 
 
   return (
