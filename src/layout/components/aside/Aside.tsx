@@ -76,7 +76,7 @@ const Aside: React.FC<Props> = (props) => {
     const defaultOpenKeys = useMemo(() => {
         const keys: string[] = [];
         items?.forEach((val) => {
-            (val as Menu).children.forEach((v) => {
+            (val as Menu).children?.forEach((v) => {
                 if (v.key === location.pathname) {
                     keys.push(val?.key as string);
                 }
@@ -105,30 +105,45 @@ const Aside: React.FC<Props> = (props) => {
         // console.log(beadCrumb)
     }, [location.pathname])
     useEffect(() => {
-        console.log(userInfo)
         const data = userInfo.permission?.map((item, index) => {
             const data:{key:string,label:JSX.Element}[] = []
-            if(item.pid === ""){
-                userInfo.permission.map((it)=>{
-                    if(item.pid==="" && it.pid === item._id){
-                        data.push({
-                            key:it.path as string,
-                            label:<Link to={it.path as string}>{it.name}</Link>,
-                        })
+            let hasParent = true
+            let count = 0
+            userInfo.permission.forEach(it=>{
+                if(it.path?.split('/')[1]===item.path?.split('/')[1] && it.path?.indexOf('/')===it.path?.lastIndexOf('/')){
+                    count += 1
+                }
+            })
+            if(item.path?.indexOf('/')!==item.path?.lastIndexOf('/')&&count===1){
+                hasParent = false
+            }
+            userInfo.permission.map((it)=>{
+                if(item.path?.split("/")[1] === it.path?.split('/')[1] && item.path!==it.path && item.path?.indexOf('/')===item.path?.lastIndexOf('/')){
+                    data.push({
+                        key:it.path as string,
+                        label:<Link to={it.path as string}>{it.name}</Link>,
+                    })
+                }
+            })
+            if(item.path?.indexOf('/')!==-1){
+                if(item.path?.indexOf('/')===item.path?.lastIndexOf('/')){
+                    return {
+                        key: (index + 1) + "",
+                        label: item.name,
+                        icon: item.name === "试卷管理" ? <CopyOutlined/> :
+                            item.name === "试题管理" ? <DiffOutlined/> :
+                                item.name === "考试管理" ? <FormOutlined/> :
+                                    item.name === "班级管理" ? <TeamOutlined/> : <BarsOutlined/>,
+                        children:data
                     }
-                })
-                return {
-                    key: (index + 1) + "",
-                    label: item.name,
-                    icon: item.name === "试卷管理" ? <CopyOutlined/> :
-                        item.name === "试题管理" ? <DiffOutlined/> :
-                            item.name === "考试管理" ? <FormOutlined/> :
-                                item.name === "班级管理" ? <TeamOutlined/> : <BarsOutlined/>,
-                    children:data
+                }else if(hasParent){
+                    return {
+                        key: (index + 1) + "",
+                        label: <Link to={item.path as string}>{item.name}</Link>
+                    }
                 }
             }
         })
-        console.log(data?.filter(item=>!!item))
         const list = data?.filter(item=>!!item)
         const res = list?.map((item,index)=>{
             return {
@@ -136,7 +151,6 @@ const Aside: React.FC<Props> = (props) => {
                 key:(index+1)+''
             }
         })
-        console.log(res)
         setItems(res)
         setForceUpdate(forceUpdate + 1)
         if(userInfo.permission){

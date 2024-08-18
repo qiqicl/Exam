@@ -26,7 +26,7 @@ import {
     systemDelRoleApi,
     systemRoleListApi,
     systemMenuListApi,
-    systemRoleApi,
+    systemRoleApi, systemAuthorityMenuApi,
 } from "../../../services";
 declare module 'antd/es/tree' {
     export interface Node extends DataNode {
@@ -158,14 +158,9 @@ const System: React.FC = () => {
         const cur = response.data.data.list?.find((item: { _id: string }) => {
             return item._id === id
         })
-        const res = await systemMenuListApi()
+        const res = await systemAuthorityMenuApi()
         const select: string[] = []
         const data = res.data.data.list.map((item: systemMenuListType, index: number) => {
-            if (cur?.permission.some((per: string) => {
-                return per === item._id
-            })) {
-                select.push(`0-${index}`)
-            }
             return {
                 title: item.name,
                 key: `0-${index}`,
@@ -175,6 +170,7 @@ const System: React.FC = () => {
                     if (cur?.permission.some((per: string) => {
                         return per === it._id
                     })) {
+                        console.log(it)
                         select.push(`0-${index}-${i}`)
                     }
                     return {

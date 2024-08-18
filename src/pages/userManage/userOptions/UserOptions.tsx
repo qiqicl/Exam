@@ -99,10 +99,10 @@ const UserOptions: React.FC = () => {
     const roleListApi = async () => {
         const res = await userOptionRoleApi()
         const list: SelectProps['options'] = []
-        res.data.data.list.forEach((item: { name: string }) => {
+        res.data.data.list.forEach((item: { name: string,value:string }) => {
             list.push({
                 label: item.name,
-                value: item.name
+                value: item.value
             })
         })
         setOptions(list)
