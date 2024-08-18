@@ -292,7 +292,7 @@ const MenuManage: React.FC = () => {
                             icon={<PlusOutlined/>}
                             onClick={() => setOpen(true)}
                         >
-                            添加用户
+                            添加菜单
                         </Button>
                     </div>
                     <Form form={formEdit} component={false}>

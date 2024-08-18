@@ -20,7 +20,9 @@ import Exam from "../pages/exam/Exam";
 import UserManage from "../pages/userManage/UserManage";
 import CreateItem from "../pages/quesion/create-item/Create-item";
 import ItemBank from "../pages/quesion/item-bank/Item-bank"
-
+import ManagePage from "../pages/userManage/managePage/ManagePage";
+import CreateSubject from "../pages/paper/create-subject/CreateSubject";
+import GroupClass from "../pages/manage-group/manage-group/GroupClass.tsx";
 const routes = [
     {
         path: '/login',
@@ -58,6 +60,15 @@ const routes = [
                     <Auth>
                         <Layout>
                             <PaperBank/>
+                        </Layout>
+                    </Auth>
+            },
+            {
+                path: '/paper/create-subject',
+                element:
+                    <Auth>
+                        <Layout>
+                            <CreateSubject/>
                         </Layout>
                     </Auth>
             }
@@ -154,6 +165,15 @@ const routes = [
                         </Layout>
                     </Auth>
             },
+            {
+                path: '/manage-group/group-class',
+                element:
+                    <Auth>
+                        <Layout>
+                            <GroupClass/>
+                        </Layout>
+                    </Auth>
+            },
         ]
     },
     {
@@ -197,6 +217,15 @@ const routes = [
                     <Auth>
                         <Layout>
                             <Personal/>
+                        </Layout>
+                    </Auth>
+            },
+            {
+                path: '/userManage/manage-page',
+                element:
+                    <Auth>
+                        <Layout>
+                            <ManagePage/>
                         </Layout>
                     </Auth>
             },
