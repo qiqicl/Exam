@@ -25,7 +25,6 @@ import {
     systemCreateRoleApi,
     systemDelRoleApi,
     systemRoleListApi,
-    systemMenuListApi,
     systemRoleApi, systemAuthorityMenuApi,
 } from "../../../services";
 declare module 'antd/es/tree' {

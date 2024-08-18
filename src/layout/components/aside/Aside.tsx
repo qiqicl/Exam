@@ -82,8 +82,9 @@ const Aside: React.FC<Props> = (props) => {
                 }
             });
         });
+        console.log(keys)
         return keys;
-    }, [])
+    }, [items])
 
     useEffect(() => {
         setBeadCrumb(() => [{
