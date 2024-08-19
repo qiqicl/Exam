@@ -349,7 +349,7 @@ const Record: React.FC = () => {
             </div>
             <div ref={domRef} style={{ padding: 20 }}>
               <div className={style.tit}>
-                <h1>{examPaperList?.name}</h1>``
+                <h1>{examPaperList?.name}</h1>
                 <h3>考试科目：{examPaperList?.classify}</h3>
               </div>
               {(examPaperList?.questions?.every((item: examPaperQuestionType) => item == null)) ? '' :
