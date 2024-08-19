@@ -440,30 +440,20 @@ export interface listType {
   endTime:string;
 }
 
-
-// export type examPaperResponse = {
-//     "code": 200,
-//     "msg": "成功",
-//     "data": {
-//         "_id": "658a27b2c0aef8a31bac555e",
-//         "name": "英语",
-//         "classify": "英语",
-//         "questions": [
-//             {
-//                 "_id": "658a2746c0aef8a31bac550b",
-//                 "question": "123",
-//                 "type": "1",
-//                 "classify": "英语",
-//                 "answer": "111111",
-//                 "options": [],
-//                 "__v": 0
-//             }
-//         ],
-//         "creator": "root",
-//         "createTime": 1703552946401,
-//         "__v": 0
-//     }
-// }
+// 
+export type examPaperResponse = {
+    code: number,
+    msg: string,
+    data: {
+        _id: string,
+        name: string,
+        classify: string,
+        questions: [],
+        creator: string,
+        createTime: number,
+        __v: number,
+    }
+}
 export interface classifyType1 {
     createTime:number;
     creator:string;
