@@ -103,8 +103,8 @@ export type QuestionCreate = {
     type: number,
     classify: string,
     answer: string,
-    options:  [],
-    desc: string
+    options:  string[],
+    desc?: string
 }
 
 // 试卷详情

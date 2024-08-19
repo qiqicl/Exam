@@ -113,6 +113,11 @@ export const createQuestionApi = (params:QuestionCreate) => {
   return request.post<CreateExamResponse>(`/question/create`,params)
 }
 
+// 试题批量新建  createQuestionMultipleApi
+export const createQuestionMultipleApi = (params:{list:QuestionCreate[]}) => {
+  return request.post<CreateExamResponse>(`/question/create/multiple`,params)
+}
+
 // 试卷新建
 export const createExamApi = (params: CreateExamParams) => {
   return request.post<CreateExamResponse>(`/exam/create?${Date.now()}`, params)
