@@ -237,11 +237,7 @@ const routes = [
     },
     {
         path: '*',
-        element: <Auth>
-                    <Layout>
-                        <div>404</div>
-                    </Layout>
-                </Auth>
+        element:  <Navigate to="/home"/>
     }
 ]
 
