@@ -8,6 +8,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Space, Form, Input, Select, message } from 'antd';
 import { useRef } from 'react';
+import {useAppSelector} from "../../../hooks/store.ts";
 
 const GroupStudents = () => {
   const [total,setTotal] = useState<number>(0)
@@ -21,6 +22,14 @@ const GroupStudents = () => {
   const [from] = Form.useForm()
   const filterParams = useRef<saveStudentType>({} as saveStudentType)
   const [fouceUpdate, setfouceUpdate] = useState(0)
+  const [isEdit,setIsEdit] = useState(false)
+  const userInfo = useAppSelector(state => state.user.userInfo)
+  useEffect(()=>{
+    console.log(userInfo.permission)
+    setIsEdit( userInfo.permission.some((item)=>{
+      return item._id === "64e803c09d9626c840d0873d"
+    }))
+  },[userInfo])
   const fouceUpd =() => {
     setfouceUpdate(fouceUpdate+1)
     }
@@ -186,11 +195,14 @@ const GroupStudents = () => {
       key: 'option',
       render: (text, record, _, action) => [
         <a
-          key="editable"
-          onClick={() => {
-            console.log(text);
-            action?.startEditable?.(record._id);
-          }}
+            key="editable"
+            onClick={() => {
+              console.log(text);
+              if(isEdit){action?.startEditable?.(record._id)}
+              else {
+                message.error('没有权限')
+              };
+            }}
         >
           编辑
         </a>,

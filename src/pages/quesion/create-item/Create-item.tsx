@@ -1,4 +1,3 @@
-import React from 'react'
 import { Flex ,Radio} from 'antd'
 import { useState } from 'react'
 import Manual from './components/manual/Manual'
