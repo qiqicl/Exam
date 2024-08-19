@@ -26,7 +26,8 @@ import {
   examListResponse,
   createTestType,
   QuestionCreate,
-  chaxun
+  chaxun,
+  examPaperResponse
 } from '../types/api'
 import {
   classListResponse,
@@ -263,21 +264,18 @@ export const systemAvatarApi = (params:FormData) => {
 export const systemUpdateInfoApi = (params:systemUpdateInfoType) => {
   return request.post('/user/update/info',params)
 }
-
 // 考试记录
 // https://zyxcl.xyz/exam_api/examination/list
 export const examRecordApi = (params:chaxun) => {
     return request.get<examListResponse>('/examination/list',{params})
 }
-
-
 // 创建考试试卷 https://zyxcl.xyz/exam_api/examination/create?1723711365616
 export const createTestApi = (time: number, createData: createTestType) => {
   return request.post<BaseResponse>(`/examination/create?${time}`, createData)
 }
 //预览考试页面接口
 export const lookExamPaperApi = (id: string) => {
-  return request.get<any>(`/exam/detail?id=${id}`)
+  return request.get<examPaperResponse>(`/exam/detail?id=${id}`)
 }
 //删除考试接口
 export const deleteExamPaperApi = (id: string) => {
