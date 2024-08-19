@@ -201,12 +201,16 @@ const GroupList = () => {
   ];
 
   const actionRef = useRef<ActionType>();
+  const scroll = {
+    y: 340
+  }
   return (
     <div key={fouceUpdate} className={style.all}>
       <div className={style.title}>
         <h2>班级列表</h2>
       </div>
       <ProTable<classAllList>
+        scroll={scroll}
         className={style.classCon}
         columns={columns}
         actionRef={actionRef}

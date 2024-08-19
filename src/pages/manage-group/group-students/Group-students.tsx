@@ -197,6 +197,9 @@ const GroupStudents = () => {
       ],
     },
   ];
+  const scroll = {
+    y: 340
+  }
   return (
     <div key={fouceUpdate}>
       <div className={style.title}>
@@ -204,6 +207,7 @@ const GroupStudents = () => {
       </div>
       {/* <div className={style.all}> */}
         <ProTable<studentAllList>
+          scroll={scroll}
           className={style.classCon}
           columns={columns}
           actionRef={actionRef}
