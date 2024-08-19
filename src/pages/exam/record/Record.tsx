@@ -35,7 +35,7 @@ const Record: React.FC = () => {
   const lookExamPaper = async (id: string) => {
     const res = await lookExamPaperApi(id)
     setExamPaperList(res.data.data)
-    console.log(res.data.data);
+    // console.log(res.data.data);
   }
   console.log(examPaperList);
   //删除考试记录
@@ -168,7 +168,7 @@ const Record: React.FC = () => {
       valueType: 'select',
       // 将 返回的数据 1 转成已完成  用枚举实现
       render: (_status, record) => {
-        return statusText[record.status]?.val
+        return statusText[record.status as number]?.val
       },
     },
     {
@@ -209,7 +209,7 @@ const Record: React.FC = () => {
           key="editable"
           onClick={() => {
             examPaperCome()
-            lookExamPaper(record.examId)
+            lookExamPaper(record.examId as string)
           }}
         >
           预览试卷
@@ -258,9 +258,7 @@ const Record: React.FC = () => {
           rowKey='_id'
           request={async () => {
             const res = await examRecordApi()
-            // console.log(res)
             const list = structuredClone(res.data.data.list)
-            // console.log(list)
             list.forEach((item: listType) => {
               let examiner = ''
               if (typeof item.examiner !== "string") {
@@ -350,13 +348,13 @@ const Record: React.FC = () => {
                 <h1>{examPaperList?.name}</h1>
                 <h3>考试科目：{examPaperList?.classify}</h3>
               </div>
-              {(examPaperList?.questions?.every((item: examPaperQuestionType) => item == null)) ? '' :
+              {(examPaperList?.questions?.every((item: examPaperQuestionType) => item === null)) ? '' :
                 <div>
-                  {(examPaperList?.questions?.find((item: examPaperQuestionType) => item.type === '1')) ?
+                  {(examPaperList?.questions?.find((item: examPaperQuestionType) => item?.type === '1')) ?
                     <div className={style.selecting}>
                       <h4 style={{color: '#1890FF'}}>单选题</h4>
                       <ul>
-                        {examPaperList?.questions?.filter((item: examPaperQuestionType) => item.type === '1').map((every: examPaperQuestionType, index: number) => {
+                        {examPaperList?.questions?.filter((item: examPaperQuestionType) => item?.type === '1').map((every: examPaperQuestionType, index: number) => {
                           return <li>
                             <p>{index + 1}. {every.answer}</p>
                             {every.options.map((v, i) => {
@@ -367,11 +365,11 @@ const Record: React.FC = () => {
                       </ul>
                     </div> : ''}
 
-                  {(examPaperList?.questions?.find((item: examPaperQuestionType) => item.type === '2')) ?
+                  {(examPaperList?.questions?.find((item: examPaperQuestionType) => item?.type === '2')) ?
                     <div className={style.moreSelecting}>
                       <h4 style={{color: '#1890FF'}}>多选题</h4>
                       <ul>
-                        {examPaperList?.questions?.filter((item: examPaperQuestionType) => item.type === '2').map((every: examPaperQuestionType, index: number) => {
+                        {examPaperList?.questions?.filter((item: examPaperQuestionType) => item?.type === '2').map((every: examPaperQuestionType, index: number) => {
                           return <li>
                             <p>{index + 1}. {every.answer}</p>
                             {every.options.map((v, i) => {

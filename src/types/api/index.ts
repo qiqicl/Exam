@@ -311,13 +311,13 @@ export type listResponse = {
     name: string,
     classify: string,
     creator: string,
-    createTime: string,
-    status: number,
-    examiner: string,
-    group: Array<string>[],
-    startTime: string,
-    endTime: string,
-    examId: string,
+    createTime: number,
+    status?: number,
+    examiner?: string,
+    group?: Array<string>[],
+    startTime?: string,
+    endTime?: string,
+    examId?: string,
     __v: number,
     questions:[]
 }
@@ -440,7 +440,7 @@ export interface listType {
   endTime:string;
 }
 
-// 
+// 预览试卷返回值类型
 export type examPaperResponse = {
     code: number,
     msg: string,
