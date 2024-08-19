@@ -69,12 +69,13 @@ const ItemBank = () => {
     getQuestionList()
   }
 
-  const isUpdate = async (index:number) => {
+  const isUpdate = async (id:string) => {
     const newList = structuredClone(questionList)
+    const updateId = questionList.findIndex(i => i._id === id)
     newList.forEach(i => {
       i.isUpdateNow = false
     })
-    newList.splice(index,1,{...questionList[index],isUpdateNow:true})
+    newList.splice(updateId,1,{...questionList[updateId],isUpdateNow:true})
     setQuestionList(newList)
   }
 
@@ -141,14 +142,14 @@ const ItemBank = () => {
       align:"center",
       key: 'action',
       fixed: 'right',
-      render: (_, record,index) => (
+      render: (_, record) => (
           record.isUpdateNow ?
           <Space size="middle">
             <a onClick={() => {update(record._id)}} style={{color:"#4096ff"}}>确认更新</a>
             <a onClick={() => {cancel()}} style={{color:"#4096ff"}}>取消</a>
           </Space>:
           <Space size="middle">
-            <Button size="small" type="primary" style={{fontSize:"12px"}} onClick={() => {isUpdate(index)}}>编辑</Button>
+            <Button size="small" type="primary" style={{fontSize:"12px"}} onClick={() => {isUpdate(record._id)}}>编辑</Button>
             <Popconfirm
             title="删除"
             description="是否删除此试卷"
