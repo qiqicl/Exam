@@ -188,7 +188,7 @@ const Aside: React.FC<Props> = (props) => {
   }, [location.pathname])
   useEffect(()=>{
     console.log(userInfo)
-    userInfo.permission.map((item,index)=>{
+    userInfo.permission?.map((item,index)=>{
         return {
           key:index + 1,
           label:item.name,

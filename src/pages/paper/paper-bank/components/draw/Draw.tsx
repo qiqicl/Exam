@@ -136,7 +136,7 @@ const Draw: React.FC<Props>  = (props) => {
                       {item.question.map((t,index) =>{
                         return <div key={index}>
                           <div className={style.question_item}>{index+1}: {t.question}</div>
-                          <div className={style.answer}>{t.options.map((a,index) => {
+                          <div className={style.answer}>{t.type === "4" ? <span>{t.answer}</span> :t.options.map((a,index) => {
                             return <span key={index}>{String.fromCharCode(64 + index + 1)}: {a}</span>
                           })}</div>
                         </div>
