@@ -238,7 +238,7 @@ const Record: React.FC = () => {
           }
         ],
       },
-      render:(text, record, index) => {
+      render:(text, _record, _index) => {
         const examiners = Array.isArray(text) ? text : [];
         return (
           <Space>
@@ -318,7 +318,7 @@ const Record: React.FC = () => {
           cardBordered
           rowKey='_id'
           request = {async (params:chaxun) => {
-            // console.log(params)// 获取输入框的内容
+            console.log(params)// 获取输入框的内容
             const res = await examRecordApi({
               classify: params.classify,
               creator:params.creator,

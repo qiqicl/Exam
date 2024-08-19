@@ -2,7 +2,7 @@ import React, {useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import style from './create.module.scss'
 import type { ProFormInstance } from '@ant-design/pro-components';
-import { userListApi, classifyListApi, examListApi, classListApi1, createTestApi,examRecordApi } from '../../../services/index'
+import { userListApi, classifyListApi, examListApi, classListApi1, createTestApi } from '../../../services/index'
 import {
   ProCard,
   ProFormSelect,
@@ -10,13 +10,12 @@ import {
   StepsForm,
   ProFormDateTimeRangePicker
 } from '@ant-design/pro-components';
-import { matchResponse, match2Response, ExamListResponse, formDataType } from '../../../types/api/index'
+import { matchResponse, match2Response, ExamListResponse, formDataType, formDataType1 } from '../../../types/api/index'
 import { message } from 'antd';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { DataType } from '../../../types/api'
 import {classifyType} from '../../../types/api/classAndStudent'
-import { log } from 'console';
 
 const columns: TableColumnsType<DataType> = [
   {
@@ -43,7 +42,6 @@ const Create: React.FC = () => {
   const [classify, setClassify] = useState<string[]>([])
   const [examiner, setExaminer] = useState<string[]>([])
   const [keys, setKeys] = useState<string[]>([])
-  const [date, setDate] = useState<string[]>([])
   const navigate = useNavigate()
   const [examList, setExamList] = useState<ExamListResponse["data"]["list"]>([]);
   //步骤二中的筛选出来的数组
@@ -193,10 +191,10 @@ const Create: React.FC = () => {
   }, [keys,formData?.dateTimeRange]);
 
   // 转开始时间和结束时间
-  const startTime = new Date(formData.startTime).toLocaleString()
+  const startTime = new Date(formData.startTime as string).toLocaleString()
   console.log(startTime)
   console.log(formData.startTime)
-  console.log(new Date(formData.startTime).toLocaleString())
+  console.log(new Date(formData.startTime as string).toLocaleString())
   console.log(formData.startTime)
 
 
@@ -294,7 +292,9 @@ const Create: React.FC = () => {
           name="time"
           title="发布考试"
           onFinish={async () => {
-            const res = await createTestApi(Date.now(), formData)
+            console.log(formData);
+            
+            const res = await createTestApi(Date.now(), formData as formDataType1)
             console.log(res)
             navigate('/exam/record')
             return true;
