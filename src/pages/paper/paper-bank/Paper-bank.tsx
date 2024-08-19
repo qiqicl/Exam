@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import Draw from "./components/draw/Draw"
 import Search from "./components/search/Search";
 import style from "./paper-bank.module.scss"
+import {useAppSelector} from "../../../hooks/store.ts";
 
 
 interface DataType {
@@ -31,6 +32,14 @@ const PaperBank = () => {
   const [open, setOpen] = useState(false)
   const updateItem = useRef<{id:string,name:string}>({} as {id:string,name:string})
   const [detail,setDetail] = useState<ExamDetailRespanse["data"]>({} as ExamDetailRespanse["data"])
+  const [isDel,setIsDel] = useState(false)
+  const userInfo = useAppSelector(state => state.user.userInfo)
+  useEffect(()=>{
+    console.log(userInfo.permission)
+    setIsDel( userInfo.permission.some((item)=>{
+      return item._id === "6640ce2612a81002923f0ae9"
+    }))
+  },[userInfo])
   const showDrawer = (id:string) => {
     setOpen(true)
     getExamDetail({id})
@@ -150,15 +159,17 @@ const PaperBank = () => {
           </Space>:
           <Space size="middle">
             <Button size="small" type="primary" style={{fontSize:"12px"}} onClick={() => {isUpdate(index)}}>编辑</Button>
-            <Popconfirm
-            title="删除"
-            description="是否删除此试卷"
-            okText="删除"
-            cancelText="取消"
-            onConfirm={() => {del(record._id)}}
-            >
-              <Button size="small" danger style={{fontSize:"12px"}} onClick={() => {console.log(_)}}>删除</Button>
-            </Popconfirm>
+            {
+              isDel?<Popconfirm
+                  title="删除"
+                  description="是否删除此试卷"
+                  okText="删除"
+                  cancelText="取消"
+                  onConfirm={() => {del(record._id)}}
+              >
+                <Button size="small" danger style={{fontSize:"12px"}} onClick={() => {console.log(_)}}>删除</Button>
+              </Popconfirm>:<div></div>
+            }
             <Button size="small" style={{fontSize:"12px"}}  onClick={() => {showDrawer(record._id)}}>预览试卷</Button>
           </Space>
       ),
