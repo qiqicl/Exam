@@ -14,8 +14,8 @@ import domtoimage from 'dom-to-image'
 const Record: React.FC = () => {
   const [fouceUpdate, setfouceUpdate] = useState(0)
   const [examPaperFlag, setExamPaperFlag] = useState(false)
-  const [examPaperList, setExamPaperList] = useState<listResponse[]>([])
-  const [optionLetter, setOptionLetter] = useState(['A', 'B', 'C', 'D'])
+  const [examPaperList, setExamPaperList] = useState<listResponse>()
+  const [optionLetter] = useState(['A', 'B', 'C', 'D'])
   const domRef = useRef<HTMLDivElement>({} as HTMLDivElement)
   //强制更新
   const fouceUpd = () => {
@@ -34,7 +34,7 @@ const Record: React.FC = () => {
   //预览试卷
   const lookExamPaper = async (id: string) => {
     const res = await lookExamPaperApi(id)
-    setExamPaperList(res.data.data)
+    setExamPaperList(res.data.data as listResponse)
     console.log(res.data.data);
   }
   console.log(examPaperList);
@@ -48,11 +48,6 @@ const Record: React.FC = () => {
       message.error(res.data.msg)
     }
   }
-  // examPaperList?.questions?.every((item: examPaperQuestionType) => item == null))  
-  const aaa = examPaperList?.questions?.every((item: examPaperQuestionType) => item === null)
-  console.log(aaa);
-  const bbb = examPaperList?.questions?.find((item: examPaperQuestionType) => item === null)
-  console.log(bbb);
   
 
   // 导出PDF
@@ -354,7 +349,7 @@ const Record: React.FC = () => {
             </div>
             <div ref={domRef} style={{ padding: 20 }}>
               <div className={style.tit}>
-                <h1>{examPaperList?.name}</h1>
+                <h1>{examPaperList?.name}</h1>``
                 <h3>考试科目：{examPaperList?.classify}</h3>
               </div>
               {(examPaperList?.questions?.every((item: examPaperQuestionType) => item == null)) ? '' :
