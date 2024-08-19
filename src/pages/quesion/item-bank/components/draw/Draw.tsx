@@ -111,7 +111,7 @@ const Draw: React.FC<Props>  = (props) => {
             <h4 className={style.type}>题型： {QuestionTypeText[props.detail.type]}</h4>
             <div className={style.question_item}>{ props.detail.question }</div>
             <div className={style.answer}>
-            {props.detail.options?.map((item,index) => {
+            {props.detail.type === "4" ? <span>{props.detail.answer}</span> :props.detail.options?.map((item,index) => {
               return <span key={index}>{String.fromCharCode(64 + index + 1)}: {item}</span>
             })}
             </div>

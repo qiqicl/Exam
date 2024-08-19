@@ -24,7 +24,8 @@ import {
   QuestionTypeResponse,
   QuestionUpdateParams,
   examListResponse,
-  createTestType
+  createTestType,
+  QuestionCreate
 } from '../types/api'
 import {
   classListResponse,
@@ -104,6 +105,11 @@ export const questionRemoveApi = (params:ExamDetailParams) => {
 //编辑试题
 export const questionUpdateApi = (params:QuestionUpdateParams) => {
   return request.post<ExamUpdateRespanse>(`/question/update`,params)
+}
+
+// 试题新建
+export const createQuestionApi = (params:QuestionCreate) => {
+  return request.post<CreateExamResponse>(`/question/create`,params)
 }
 
 // 试卷新建

@@ -98,6 +98,15 @@ export type QuestionListResponse = {
     }
 }
 
+export type QuestionCreate = {
+    question: string,
+    type: number,
+    classify: string,
+    answer: string,
+    options:  [],
+    desc: string
+}
+
 // 试卷详情
 export type ExamDetailParams = Record<"id", string>
 
