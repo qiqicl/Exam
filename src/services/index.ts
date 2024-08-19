@@ -25,7 +25,8 @@ import {
   QuestionUpdateParams,
   examListResponse,
   createTestType,
-  QuestionCreate
+  QuestionCreate,
+  chaxun
 } from '../types/api'
 import {
   classListResponse,
@@ -248,20 +249,20 @@ export const userInfoApi = () => {
   return request.get('/user/info')
 }
 
-// 考试记录
-// https://zyxcl.xyz/exam_api/examination/list
-export const examRecordApi = () => {
-  return request.get<examListResponse>('/examination/list')
-}
-
 
 //更新头像
-export const systemAvatarApi = (params: FormData) => {
-  return request.post('/profile', params)
+export const systemAvatarApi = (params:FormData) => {
+  return request.post('/profile',params)
 }
 //修改用户信息
-export const systemUpdateInfoApi = (params: systemUpdateInfoType) => {
-  return request.post('/user/update/info', params)
+export const systemUpdateInfoApi = (params:systemUpdateInfoType) => {
+  return request.post('/user/update/info',params)
+}
+
+// 考试记录
+// https://zyxcl.xyz/exam_api/examination/list
+export const examRecordApi = (params:chaxun) => {
+    return request.get<examListResponse>('/examination/list',{params})
 }
 
 
@@ -277,4 +278,3 @@ export const lookExamPaperApi = (id: string) => {
 export const deleteExamPaperApi = (id: string) => {
   return request.post<ExamRemoveRespanse>('/examination/remove', {id})
 }
-
