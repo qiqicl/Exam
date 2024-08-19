@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet } from "react-router-dom";
 import style from './Manage-group.module.scss'
 const ManageGroup = () => {
