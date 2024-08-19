@@ -43,10 +43,12 @@ const GroupStudents = () => {
   }, []);
   console.log(norepeatClassName);
   // 修改成键值对形式的 对象
-  const resetKeyVal = norepeatClassName.reduce((prev:any,  { name }: any) => {
+  const resetKeyVal = norepeatClassName.reduce<Record<string, string>>((prev,  {name}) => {
+    console.log(prev);
+    
     prev[name] = name;
     return prev;
-  }, {});
+  }, {} as Record<string, string>);
   console.log(resetKeyVal);
   const changeFlag =( e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if(e.target === e.currentTarget) {

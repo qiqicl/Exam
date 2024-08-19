@@ -385,7 +385,6 @@ const Record: React.FC = () => {
           </div>
         </div>
         : ''}
-
     </div>
   )
 }

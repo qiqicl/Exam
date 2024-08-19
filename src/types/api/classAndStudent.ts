@@ -3,7 +3,7 @@ export type classListResponse = {
     code: number;
     data: {
         list: [];
-        total?: number;
+        total: number;
         totalPage?: number;
     };
     msg: string;

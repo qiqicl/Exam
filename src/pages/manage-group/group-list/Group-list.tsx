@@ -10,7 +10,7 @@ import { useRef } from 'react';
 
 const GroupList = () => {
   const [classFlag, setClassFalg] = useState(false)
-  const [total, setTotal] = useState(0)
+  const [total, setTotal] = useState<number>(0)
   const [page, setPage] = useState(1)
   const [pagesize, setPageSize] = useState(5)
   const [curLength, setCurLength] = useState<number>()
@@ -46,10 +46,10 @@ const GroupList = () => {
     }
     return prev;
   }, []);
-  const resetKeyVal = uniqueArray.reduce((prev: any, { name }: any) => {
+  const resetKeyVal = uniqueArray.reduce<Record<string, string>>((prev,  {name}) => {
     prev[name] = name;
     return prev;
-  }, {});
+  }, {} as Record<string, string>);
   //老师名字去重并且格式化
   const teacherArray: userClassType[] = userClassList.reduce((prev: userClassType[], current) => {
     if (!prev.some(item => item.username === current.username)) {
@@ -57,15 +57,15 @@ const GroupList = () => {
     }
     return prev;
   }, []);
-  const resetteacherKeyVal = teacherArray.reduce((prev: any, { username }: any) => {
+  const resetteacherKeyVal = teacherArray.reduce<Record<string, string>>((prev,  {username}) => {
     prev[username] = username;
     return prev;
-  }, {});
+  }, {} as Record<string, string>);
   //班级格式化
-  const resetClassKeyVal = classList.reduce((prev: any, { name }: any) => {
-    prev[name] = name
-    return prev; 
-  }, {})
+  const resetClassKeyVal = classList.reduce<Record<string, string>>((prev,  {name}) => {
+    prev[name] = name;
+    return prev;
+  }, {} as Record<string, string>);
   const fouceUpd = () => {
     setfouceUpdate(fouceUpdate + 1)
   }
@@ -78,8 +78,8 @@ const GroupList = () => {
     setClassFalg(!classFlag)
   }
   //编辑班级列表
-  const classSave = async (time: number) => {
-    const res = await calssEditApi(time, filterParams.current)
+  const classSave = async () => {
+    const res = await calssEditApi(filterParams.current)
     console.log(res);
 
   }
@@ -234,10 +234,10 @@ const GroupList = () => {
           type: 'multiple',
           onSave: async (_key, record: classAllList) => {
             getPartParams(record)
-            classSave(Date.now())
+            classSave()
 
           },
-          onDelete: async (_key: any, row) => {
+          onDelete: async (_key, row) => {
             classDelete(row._id)
           },
         }}
