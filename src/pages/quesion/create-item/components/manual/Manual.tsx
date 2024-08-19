@@ -67,9 +67,11 @@ const Manual = () => {
     console.log('Received values of form: ',JSON.parse(JSON.stringify(newValues)))
     const res = await createQuestionApi(JSON.parse(JSON.stringify(newValues)))
     console.log(res)
-    message.success(res.data.msg)
     if(res.data.code === 200) {
       form.resetFields()
+      message.success(res.data.msg)
+    }else{
+      message.error(res.data.msg)
     }
   }
 
