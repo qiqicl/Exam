@@ -36,6 +36,8 @@ import {
   createStudentType,
   saveStudentType,
   findClassType,
+  editClassType,
+  findStudentType
 } from '../types/api/classAndStudent.ts'
 import request from './request.tsx'
 
@@ -131,7 +133,7 @@ export const classListApi1 = () => {
   return request.get<classListResponse>('/studentGroup/list/')
 }
 // 学生列表
-export const StudentofClassApi = (params: classParams) => {
+export const StudentofClassApi = (params: findStudentType) => {
   return request.get<classListResponse>('/student/list/', { params })
 }
 // 班级列表&&//查询班级列表
@@ -146,7 +148,7 @@ export const classRemoveApi = (id: string) => {
 }
 // 编辑
 // https://zyxcl.xyz/exam_api/studentGroup/update?1723541773961
-export const calssEditApi = (params: string) => {
+export const calssEditApi = (params: editClassType) => {
   return request.post<BaseResponse>(`/studentGroup/update?${params}`)
 }
 
@@ -159,7 +161,7 @@ export const calssCreateApi = (time: number, params: createClassType) => {
 //新建学生列表  `/student/create${time}`,value   createStudentType
 
 export const studentCreateApi = (time: number, params: createStudentType) => {
-  return request.post<createStudentType>(`/student/create?${time}`, params)
+  return request.post<classListResponse>(`/student/create?${time}`, params)
 }
 
 //编辑学生列表
