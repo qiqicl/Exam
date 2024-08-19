@@ -16,6 +16,7 @@ import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { DataType } from '../../../types/api'
 import {classifyType} from '../../../types/api/classAndStudent'
+import { log } from 'console';
 
 const columns: TableColumnsType<DataType> = [
   {
@@ -193,6 +194,7 @@ const Create: React.FC = () => {
 
   // 转开始时间和结束时间
   const startTime = new Date(formData.startTime).toLocaleString()
+  console.log(startTime)
   console.log(formData.startTime)
   console.log(new Date(formData.startTime).toLocaleString())
   console.log(formData.startTime)
@@ -303,8 +305,8 @@ const Create: React.FC = () => {
           <p>科目分类：{formData?.classify}</p>
           <p>监考人员：{formData?.examiner}</p>
           <p>班级：{formData?.group}</p>
-          <p>考试时间: &nbsp;&nbsp;开始时间:{formData.startTime}</p>
-          <p className={style.end}>结束时间:{formData.endTime}</p>
+          <p>考试时间: &nbsp;&nbsp;开始时间:{new Date(Number(formData.startTime)).toLocaleString()}</p>
+          <p className={style.end}>结束时间:{new Date(Number(formData.endTime)).toLocaleString()}</p>
         </StepsForm.StepForm>
       </StepsForm>
     </ProCard>
