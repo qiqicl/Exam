@@ -39,8 +39,7 @@ const GroupList = () => {
     userClassApi()
     calssifyApi()
     calssAll()
-  }, [])
-
+  }, [])  
   const uniqueArray: classifyType[] = ClassifyList.reduce((prev: classifyType[], current) => {
     if (!prev.some(item => item.name === current.name)) {
       prev.push(current)
@@ -65,9 +64,8 @@ const GroupList = () => {
   //班级格式化
   const resetClassKeyVal = classList.reduce((prev: any, { name }: any) => {
     prev[name] = name
-    return prev;
-  }, {});
-
+    return prev; 
+  }, {})
   const fouceUpd = () => {
     setfouceUpdate(fouceUpdate + 1)
   }
