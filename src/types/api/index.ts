@@ -98,6 +98,15 @@ export type QuestionListResponse = {
     }
 }
 
+export type QuestionCreate = {
+    question: string,
+    type: number,
+    classify: string,
+    answer: string,
+    options:  [],
+    desc: string
+}
+
 // 试卷详情
 export type ExamDetailParams = Record<"id", string>
 
@@ -298,7 +307,7 @@ export interface DataType {
 
 // 调考试记录 最里面的值
 export type listResponse = {
-    id: string,
+    _id: string,
     name: string,
     classify: string,
     creator: string,
@@ -307,13 +316,25 @@ export type listResponse = {
     examiner: string,
     group: Array<string>[],
     startTime: string,
-    endTime: string
-
+    endTime: string,
+    examId: string,
+    __v: number,
+    questions:[]
 }
-
-
 export type RowResponse = listResponse & {
   url:string
+}
+
+// 试卷问题类型
+export type examPaperQuestionType = {
+    answer: string,
+    classify: string,
+    desc: string,
+    options: [],
+    question: string;
+    type: string,
+    __v: number,
+    _id: string,
 }
 
 
