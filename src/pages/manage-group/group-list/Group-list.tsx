@@ -7,6 +7,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Space, message, Form, Input, Select } from 'antd';
 import { useRef } from 'react';
+import {useAppSelector} from "../../../hooks/store.ts";
 
 const GroupList = () => {
   const [classFlag, setClassFalg] = useState(false)
@@ -19,6 +20,14 @@ const GroupList = () => {
   const [ClassifyList, setClassifyList] = useState<classifyType[]>([])
   const [form] = Form.useForm()
   const [fouceUpdate, setfouceUpdate] = useState(0)
+  const [isDel,setIsDel] = useState(false)
+  const userInfo = useAppSelector(state => state.user.userInfo)
+  useEffect(()=>{
+    console.log(userInfo.permission)
+    setIsDel( userInfo.permission.some((item)=>{
+      return item._id === "64e803c09d9626c840d0873d"
+    }))
+  },[userInfo])
   const filterParams = useRef<editClassType>({} as editClassType)
 
   const userClassApi = async () => {
@@ -238,7 +247,12 @@ const GroupList = () => {
 
           },
           onDelete: async (_key: any, row) => {
-            classDelete(row._id)
+            if(isDel) {
+              classDelete(row._id)
+            }else {
+              message.error('没有权限')
+              fouceUpd()
+            }
           },
         }}
         columnsState={{

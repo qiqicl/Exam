@@ -82,6 +82,7 @@ const System: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             key: 'action',
+            width:200
         },
     ];
     const handleOk = async () => {
@@ -169,7 +170,6 @@ const System: React.FC = () => {
                     if (cur?.permission.some((per: string) => {
                         return per === it._id
                     })) {
-                        console.log(it)
                         select.push(`0-${index}-${i}`)
                     }
                     return {

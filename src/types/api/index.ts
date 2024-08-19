@@ -475,3 +475,10 @@ export interface chaxun {
     startTime:string;
     status:string;
 }
+//路由菜单
+export type MenuItemsType = {
+    key:string,
+    label:string | JSX.Element,
+    icon?:JSX.Element,
+    children?:{key:string,label:JSX.Element|string}[]
+}
