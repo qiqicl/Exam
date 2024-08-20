@@ -6,7 +6,7 @@
     flex-direction: column;
     .main{
         flex: 1;
-        // overflow: hidden;
+        overflow-y: auto;
         .aside{
             height: 100%;
         }
