@@ -198,7 +198,7 @@ const Aside: React.FC<Props> = (props) => {
                             style={{margin: "16px 10px"}}
                             items={beadCrumb}
                         ></Breadcrumb>
-                        <div style={{flex: 1}}>
+                        <div style={{flex: 1,overflowY:"auto"}}>
                             {props.children}
                         </div>
                     </Content>:<div>加载中</div>}
