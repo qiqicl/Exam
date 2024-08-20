@@ -100,7 +100,7 @@ export type QuestionListResponse = {
 
 export type QuestionCreate = {
     question: string,
-    type: number | string,
+    type: number,
     classify: string,
     answer: string,
     options:  string[],
