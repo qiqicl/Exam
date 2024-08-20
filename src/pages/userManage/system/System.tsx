@@ -11,9 +11,12 @@ import {
     message,
     Tree,
     Popconfirm,
-    Space, TableProps
+    Space,
+    TableProps,
+    Spin,
+    Flex
 } from 'antd';
-import type {TreeProps, TreeDataNode,PopconfirmProps} from 'antd';
+import type {TreeProps, TreeDataNode, PopconfirmProps} from 'antd';
 import {DataNode, Node} from 'antd/es/tree'
 import {
     systemCreatePole,
@@ -27,6 +30,7 @@ import {
     systemRoleListApi,
     systemRoleApi, systemAuthorityMenuApi,
 } from "../../../services";
+
 declare module 'antd/es/tree' {
     export interface Node extends DataNode {
         permission?: string;
@@ -43,6 +47,7 @@ const System: React.FC = () => {
     const [curPermission, setCurPermission] = useState<string[]>()
     const [sel, setSel] = useState<string[]>([])
     const [upDate, setUpDate] = useState<number>(0)
+    const [loading, setLoading] = useState(true)
     const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
         console.log('selected', selectedKeys, info);
     };
@@ -50,39 +55,43 @@ const System: React.FC = () => {
         setUpDate(upDate + 1)
     }
     const showDefaultDrawer = () => {
+        const wait = setTimeout(() => {
+            setLoading(false)
+            clearTimeout(wait)
+        }, 1000)
         setOpen(true);
     };
-    const columns:TableProps<systemPoleList>['columns'] = [
+    const columns: TableProps<systemPoleList>['columns'] = [
         {
-            align:'center',
+            align: 'center',
             title: '角色',
             dataIndex: 'name',
             key: 'name',
         },
         {
-            align:'center',
+            align: 'center',
             title: '角色关键字',
             dataIndex: 'value',
             key: 'value',
         },
         {
-            align:'center',
+            align: 'center',
             title: '创建人',
             dataIndex: 'creator',
             key: 'creator',
         },
         {
-            align:'center',
+            align: 'center',
             title: '创建时间',
             dataIndex: 'createTime',
             key: 'createTime',
         },
         {
-            align:'center',
+            align: 'center',
             title: '操作',
             dataIndex: 'action',
             key: 'action',
-            width:200
+            width: 200
         },
     ];
     const handleOk = async () => {
@@ -189,6 +198,7 @@ const System: React.FC = () => {
     }
     const onClose = () => {
         setOpen(false);
+        setLoading(true)
         message.error("取消")
     }
     const onSure = async () => {
@@ -202,7 +212,7 @@ const System: React.FC = () => {
     }
     const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
         console.log('onCheck', checkedKeys, info);
-        const list = info.checkedNodes.map((item:Node) => {
+        const list = info.checkedNodes.map((item: Node) => {
             return item.permission
         })
         setCurPermission(list as string[])
@@ -234,15 +244,21 @@ const System: React.FC = () => {
                     </Space>
                 }
             >
-                <Tree
-                    key={upDate}
-                    checkable
-                    defaultExpandAll={true}
-                    onSelect={onSelect}
-                    onCheck={onCheck}
-                    treeData={treeData}
-                    defaultCheckedKeys={sel}
-                />
+                <Flex gap="middle" vertical>
+                    <Spin size="large" spinning={loading}>
+                        {
+                            loading ? <div></div> : <Tree
+                                key={upDate}
+                                checkable
+                                defaultExpandAll={true}
+                                onSelect={onSelect}
+                                onCheck={onCheck}
+                                treeData={treeData}
+                                defaultCheckedKeys={sel}
+                            />
+                        }
+                    </Spin>
+                </Flex>
             </Drawer>
             <h2>角色管理</h2>
             <div className={style.main}>
