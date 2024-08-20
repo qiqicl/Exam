@@ -2,7 +2,7 @@
 import {useMemo, useEffect, useState, useRef} from "react";
 import {Breadcrumb, Layout, Menu, theme} from "antd";
 import {Link} from "react-router-dom";
-import type {MenuProps} from "antd";
+// import type {MenuProps} from "antd";
 import {
     CopyOutlined,
     FormOutlined,
@@ -11,6 +11,7 @@ import {
     DiffOutlined,
 } from "@ant-design/icons";
 import {useAppSelector} from "../../../hooks/store.ts";
+import {MenuItemsType} from "../../../types/api";
 // import type {examListSearchParams} from "../../../types/api";
 
 interface Props {
@@ -30,12 +31,12 @@ interface Menu {
 // type BreadCrumbParams = Record< 'paper' | 'paper-bank' | 'create-paper', string >
 type BreadCrumbItem = { title: string | JSX.Element }[]
 
-type MenuItem = Required<MenuProps>["items"][number];
+// type MenuItem = Required<MenuProps>["items"][number];
 
 const Aside: React.FC<Props> = (props) => {
     const pathName = useRef(location.pathname.split('/').filter(i => i))
     const userInfo = useAppSelector(state => state.user.userInfo)
-    const [items,setItems] = useState<MenuItem[]>()
+    const [items,setItems] = useState<MenuItemsType[]>()
     const [forceUpdate,setForceUpdate] = useState(0)
     const [load,setLoad] = useState(false)
     const [beadCrumb, setBeadCrumb] = useState<BreadCrumbItem>([
@@ -76,15 +77,17 @@ const Aside: React.FC<Props> = (props) => {
     const defaultOpenKeys = useMemo(() => {
         const keys: string[] = [];
         items?.forEach((val) => {
-            (val as Menu).children?.forEach((v) => {
+            if(!val?.children && val.key === location.pathname){
+                keys.push(val.key)
+            }
+            val.children?.forEach((v) => {
                 if (v.key === location.pathname) {
                     keys.push(val?.key as string);
                 }
             });
         });
-        console.log(keys)
         return keys;
-    }, [items])
+    }, [items,location.pathname])
 
     useEffect(() => {
         setBeadCrumb(() => [{
@@ -106,7 +109,7 @@ const Aside: React.FC<Props> = (props) => {
         // console.log(beadCrumb)
     }, [location.pathname])
     useEffect(() => {
-        const data = userInfo.permission?.map((item, index) => {
+        const data = userInfo.permission?.map((item) => {
             const data:{key:string,label:JSX.Element}[] = []
             let hasParent = true
             let count = 0
@@ -129,7 +132,7 @@ const Aside: React.FC<Props> = (props) => {
             if(item.path?.indexOf('/')!==-1){
                 if(item.path?.indexOf('/')===item.path?.lastIndexOf('/')){
                     return {
-                        key: (index + 1) + "",
+                        key: item.path?.split('/')[1],
                         label: item.name,
                         icon: item.name === "试卷管理" ? <CopyOutlined/> :
                             item.name === "试题管理" ? <DiffOutlined/> :
@@ -139,20 +142,14 @@ const Aside: React.FC<Props> = (props) => {
                     }
                 }else if(hasParent){
                     return {
-                        key: (index + 1) + "",
+                        key: item.path,
                         label: <Link to={item.path as string}>{item.name}</Link>
                     }
                 }
             }
         })
         const list = data?.filter(item=>!!item)
-        const res = list?.map((item,index)=>{
-            return {
-                ...item,
-                key:(index+1)+''
-            }
-        })
-        setItems(res)
+        setItems(list as MenuItemsType[])
         setForceUpdate(forceUpdate + 1)
         if(userInfo.permission){
             setLoad(true)

@@ -3,7 +3,7 @@ export type classListResponse = {
     code: number;
     data: {
         list: [];
-        total?: number;
+        total: number;
         totalPage?: number;
     };
     msg: string;
@@ -72,9 +72,10 @@ export type classifyType = {
   creator: string;
   name: string;
   value: string;
-  __v: string;
+  __v: string | number;
   _id: string;
 }
+
 
 //创建班级列表类型
 export type createClassType = {

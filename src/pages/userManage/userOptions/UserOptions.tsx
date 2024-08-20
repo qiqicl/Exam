@@ -202,6 +202,7 @@ const UserOptions: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             key: 'action',
+            width:250
         },
     ];
     const searchList = async (value: FormVal) => {

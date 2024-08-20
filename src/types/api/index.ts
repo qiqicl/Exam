@@ -311,13 +311,13 @@ export type listResponse = {
     name: string,
     classify: string,
     creator: string,
-    createTime: string,
-    status: number,
-    examiner: string,
-    group: Array<string>[],
-    startTime: string,
-    endTime: string,
-    examId: string,
+    createTime: number,
+    status?: number,
+    examiner?: string,
+    group?: Array<string>[],
+    startTime?: string,
+    endTime?: string,
+    examId?: string,
     __v: number,
     questions:[]
 }
@@ -341,13 +341,15 @@ export type examPaperQuestionType = {
 
 // match的数据类型
 export interface matchResponse {
-    key: string;
+    key?: string;
     name: string;
-    class: string;
+    class?: string;
     creator: string;
     createTime: number;
     classify: string;
     _id: string;
+    questions?:string[];
+    __v?:number;
 
 }
 
@@ -357,19 +359,29 @@ export interface match2Response {
   name: string;
   class: string;
   creator: string;
-  createTime: number | string
+  createTime: string
 }
 export interface formDataType {
-  name: string;
-  classify:string;
-  examiner:string;
-  group:string;
-  startTime:string;
-  endTime:string;
-  examId:string
-  dateTimeRange:string[]
+  name?: string;
+  classify?:string;
+  examiner?:string;
+  group?:string;
+  startTime?:string;
+  endTime?:string;
+  examId?:string
+  dateTimeRange?:string[]
 }
-
+export interface formDataType1 {
+    name: string;
+    classify:string;
+    examiner:string;
+    group:string;
+    startTime:string;
+    endTime:string;
+    examId:string;
+    dateTimeRange:string[];
+    
+  }
 
 // examList 数据类型
 export interface examListResponse {
@@ -440,7 +452,7 @@ export interface listType {
   endTime:string;
 }
 
-// 
+// 预览试卷返回值类型
 export type examPaperResponse = {
     code: number,
     msg: string,
@@ -463,15 +475,22 @@ export interface classifyType1 {
     _id:string;
 }
 export interface chaxun {
-    classify: string;
-    creator:string;
+    classify?: string;
+    creator?:string;
     current?: number;
-    endTime: string;
-    examiner:string;
-    group: string;
-    name:string;
+    endTime?: string;
+    examiner?:string;
+    group?: string;
+    name?:string;
     pageSize?:number;
-    showTime:string;
-    startTime:string;
-    status:string;
+    showTime?:string;
+    startTime?:string;
+    status?:string;
+}
+//路由菜单
+export type MenuItemsType = {
+    key:string,
+    label:string | JSX.Element,
+    icon?:JSX.Element,
+    children?:{key:string,label:JSX.Element|string}[]
 }

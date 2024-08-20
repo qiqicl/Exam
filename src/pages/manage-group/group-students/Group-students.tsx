@@ -8,6 +8,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Space, Form, Input, Select, message } from 'antd';
 import { useRef } from 'react';
+import {useAppSelector} from "../../../hooks/store.ts";
 
 const GroupStudents = () => {
   const [total,setTotal] = useState<number>(0)
@@ -21,6 +22,14 @@ const GroupStudents = () => {
   const [from] = Form.useForm()
   const filterParams = useRef<saveStudentType>({} as saveStudentType)
   const [fouceUpdate, setfouceUpdate] = useState(0)
+  const [isEdit,setIsEdit] = useState(false)
+  const userInfo = useAppSelector(state => state.user.userInfo)
+  useEffect(()=>{
+    console.log(userInfo.permission)
+    setIsEdit( userInfo.permission.some((item)=>{
+      return item._id === "64e803c09d9626c840d0873d"
+    }))
+  },[userInfo])
   const fouceUpd =() => {
     setfouceUpdate(fouceUpdate+1)
     }
@@ -43,10 +52,12 @@ const GroupStudents = () => {
   }, []);
   console.log(norepeatClassName);
   // 修改成键值对形式的 对象
-  const resetKeyVal = norepeatClassName.reduce((prev:any,  { name }: any) => {
+  const resetKeyVal = norepeatClassName.reduce<Record<string, string>>((prev,  {name}) => {
+    console.log(prev);
+    
     prev[name] = name;
     return prev;
-  }, {});
+  }, {} as Record<string, string>);
   console.log(resetKeyVal);
   const changeFlag =( e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if(e.target === e.currentTarget) {
@@ -186,17 +197,23 @@ const GroupStudents = () => {
       key: 'option',
       render: (text, record, _, action) => [
         <a
-          key="editable"
-          onClick={() => {
-            console.log(text);
-            action?.startEditable?.(record._id);
-          }}
+            key="editable"
+            onClick={() => {
+              console.log(text);
+              if(isEdit){action?.startEditable?.(record._id)}
+              else {
+                message.error('没有权限')
+              };
+            }}
         >
           编辑
         </a>,
       ],
     },
   ];
+  const scroll = {
+    y: 340
+  }
   return (
     <div key={fouceUpdate}>
       <div className={style.title}>
@@ -204,6 +221,7 @@ const GroupStudents = () => {
       </div>
       {/* <div className={style.all}> */}
         <ProTable<studentAllList>
+          scroll={scroll}
           className={style.classCon}
           columns={columns}
           actionRef={actionRef}
